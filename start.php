@@ -18,4 +18,8 @@ function odt_editor_init() {
     elgg_register_plugin_hook_handler("route", "file", "odt_editor_route_file_handler");
 
     elgg_register_action("odt_editor/upload", elgg_get_plugins_path() . "odt_editor/actions/odt_editor/upload.php");
+
+    // fight Dojo css ruining some of elgg styling
+    elgg_register_css('elgg.odt_editor_dojo_overwrite', elgg_get_simplecache_url('css', 'odt_editor_dojo_overwrite'));
+    elgg_register_simplecache_view('css/odt_editor_dojo_overwrite');
 }
