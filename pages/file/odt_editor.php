@@ -30,9 +30,11 @@ elgg_load_js('wodotexteditor');
 elgg_load_js('elgg.odt_editor');
 elgg_load_css('elgg.odt_editor_dojo_overwrite');
 
+$edit_mode = get_input('odt_editor_mode');
+
 $download_url = elgg_get_site_url() . "file/download/{$file_guid}";
 // TODO: the header bar size of 28px should be fetched from somewhere, to support themes
-$content = "<div class=\"notranslate\" translate=\"no\" id=\"odt_editor\" style=\"width: 100%;height: calc(100% - 28px); margin-top: 28px; padding: 0;\" data-document-url=\"$download_url\" data-guid=\"$file_guid\"></div>";
+$content = "<div class=\"notranslate\" translate=\"no\" id=\"odt_editor\" style=\"width: 100%;height: calc(100% - 28px); margin-top: 28px; padding: 0;\" data-document-url=\"$download_url\" data-guid=\"$file_guid\" data-editmode=\"$edit_mode\"></div>";
 
 $body = $content;
 

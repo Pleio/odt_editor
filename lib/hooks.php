@@ -23,9 +23,19 @@ function odt_editor_route_file_handler($hook, $type, $return_value, $params) {
     if (!empty($return_value) && is_array($return_value)) {
         $page = $return_value['segments'];
 
+        // TODO: check if $file belongs to group!
         if ($page[0] == "view") {
             $file = get_entity($page[1]);
             if ($file && $file->getMimeType() == "application/vnd.oasis.opendocument.text") {
+                set_input('guid', $page[1]);
+                set_input('odt_editor_mode', "full");
+                include(dirname(dirname(__FILE__)) . "/pages/file/odt_editor.php");
+                $result = false;
+            }
+        } else if ($page[0] == "review") {
+            $file = get_entity($page[1]);
+            if ($file && $file->getMimeType() == "application/vnd.oasis.opendocument.text") {
+                set_input('odt_editor_mode', "review");
                 set_input('guid', $page[1]);
                 include(dirname(dirname(__FILE__)) . "/pages/file/odt_editor.php");
                 $result = false;

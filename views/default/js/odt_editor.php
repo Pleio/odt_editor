@@ -53,14 +53,23 @@ elgg.odt_editor.init = function() {
         });
     }
 
-    var editorConfig = {
+    var odtEditorDiv = document.getElementById("odt_editor");
+    var isReviewMode = odtEditorDiv && odtEditorDiv.getAttribute("data-editmode") === "review";
+
+    var editorConfig = isReviewMode ? {
+        reviewModeEnabled: true,
+        undoRedoEnabled: true,
+        saveCallback: save,
+        userData: {
+            fullName: elgg.get_logged_in_user_entity().name
+        }
+    } : {
         allFeaturesEnabled: true,
         saveCallback: save,
         userData: {
             fullName: elgg.get_logged_in_user_entity().name
         }
     };
-    var odtEditorDiv = document.getElementById("odt_editor");
     var documentUrl = odtEditorDiv && odtEditorDiv.getAttribute("data-document-url");
     var guid = odtEditorDiv && odtEditorDiv.getAttribute("data-guid");
 
