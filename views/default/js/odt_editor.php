@@ -10,6 +10,7 @@ elgg.provide("elgg.odt_editor");
 
 elgg.odt_editor.init = function() {
     var editor,
+        fileGuid,
         isDocumentModifed = false;
 
     function save() {
@@ -24,7 +25,7 @@ elgg.odt_editor.init = function() {
             var formData = new FormData();
 
             formData.append("upload", blob);
-            formData.append("file_guid", guid);
+            formData.append("file_guid", fileGuid);
             var token = {};
             elgg.security.addToken(token);
             Object.keys(token).forEach(function (k) {
@@ -71,7 +72,7 @@ elgg.odt_editor.init = function() {
         }
     };
     var documentUrl = odtEditorDiv && odtEditorDiv.getAttribute("data-document-url");
-    var guid = odtEditorDiv && odtEditorDiv.getAttribute("data-guid");
+    fileGuid = odtEditorDiv && odtEditorDiv.getAttribute("data-guid");
 
     Wodo.createTextEditor("odt_editor", editorConfig, function (err, e) {
         editor = e;
