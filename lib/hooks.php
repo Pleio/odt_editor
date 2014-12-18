@@ -27,7 +27,7 @@ function odt_editor_route_file_handler($hook, $type, $return_value, $params) {
             $file = get_entity($page[1]);
             if ($file && $file->getMimeType() == "application/vnd.oasis.opendocument.text") {
                 set_input('guid', $page[1]);
-                include(dirname(dirname(__FILE__)) . "/pages/file/view.php");
+                include(dirname(dirname(__FILE__)) . "/pages/file/odt_editor.php");
                 $result = false;
             }
         }
