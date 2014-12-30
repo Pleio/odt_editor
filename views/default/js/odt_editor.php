@@ -11,6 +11,7 @@ elgg.provide("elgg.odt_editor");
 elgg.odt_editor.init = function() {
     var editor,
         fileGuid,
+        fileName,
         isDocumentModifed = false;
 
     function save() {
@@ -54,6 +55,18 @@ elgg.odt_editor.init = function() {
         });
     }
 
+    function download() {
+        editor.getDocumentAsByteArray(function(err, data) {
+            if (err) {
+                elgg.register_error(err);
+                return;
+            }
+            var mimetype = "application/vnd.oasis.opendocument.text",
+                blob = new Blob([data.buffer], {type: mimetype});
+            saveAs(blob, fileName);
+        });
+    }
+
     var odtEditorDiv = document.getElementById("odt_editor");
     var isReviewMode = odtEditorDiv && odtEditorDiv.getAttribute("data-editmode") === "review";
 
@@ -61,18 +74,22 @@ elgg.odt_editor.init = function() {
         reviewModeEnabled: true,
         undoRedoEnabled: true,
         saveCallback: save,
+        downloadCallback: download,
         userData: {
             fullName: elgg.get_logged_in_user_entity().name
         }
     } : {
         allFeaturesEnabled: true,
+        zoomingEnabled: false,
         saveCallback: save,
+        downloadCallback: download,
         userData: {
             fullName: elgg.get_logged_in_user_entity().name
         }
     };
     var documentUrl = odtEditorDiv && odtEditorDiv.getAttribute("data-document-url");
     fileGuid = odtEditorDiv && odtEditorDiv.getAttribute("data-guid");
+    fileName = odtEditorDiv && odtEditorDiv.getAttribute("data-filename");
 
     Wodo.createTextEditor("odt_editor", editorConfig, function (err, e) {
         editor = e;

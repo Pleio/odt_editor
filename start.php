@@ -9,6 +9,7 @@ elgg_register_event_handler('init', 'system', 'odt_editor_init');
 
 function odt_editor_init() {
     // TODO: why does  elgg_get_plugins_path()  not work here?
+    elgg_register_js('FileSaver', '/mod/odt_editor/vendors/FileSaver.js');
     elgg_register_js('wodotexteditor', '/mod/odt_editor/vendors/wodotexteditor/wodotexteditor.js');
 
     elgg_register_js('elgg.odt_editor', elgg_get_simplecache_url('js', 'odt_editor'));
