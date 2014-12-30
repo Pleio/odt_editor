@@ -666,7 +666,7 @@ var Wodo = Wodo || (function () {
                 annotationsEnabled: annotationsEnabled,
                 undoRedoEnabled: undoRedoEnabled,
                 zoomingEnabled: zoomingEnabled,
-                aboutEnabled: true
+                aboutEnabled: false
             });
 
             odfCanvas = new odf.OdfCanvas(canvasElement);
