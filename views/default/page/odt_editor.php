@@ -48,12 +48,6 @@ $lang = get_current_language();
 		</div>
 	</div>
 			<?php echo $body; ?>
-<!--	<div class="elgg-page-footer">
-		<div class="elgg-inner">
-			<?php echo $footer; ?>
-		</div>
-	</div>-->
 </div>
-<!--?php echo elgg_view('page/elements/foot'); ?-->
 </body>
 </html>
