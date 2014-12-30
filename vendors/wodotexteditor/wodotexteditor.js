@@ -280,6 +280,7 @@ var Wodo = Wodo || (function () {
             //
             loadOdtFile = editorOptions.loadCallback,
             saveOdtFile = editorOptions.saveCallback,
+            downloadOdtFile = editorOptions.downloadCallback,
             close =       editorOptions.closeCallback,
             //
             directTextStylingEnabled = isEnabled(editorOptions.directTextStylingEnabled),
@@ -654,6 +655,7 @@ var Wodo = Wodo || (function () {
                 onToolDone: setFocusToOdfCanvas,
                 loadOdtFile: loadOdtFile,
                 saveOdtFile: saveOdtFile,
+                downloadOdtFile: downloadOdtFile,
                 close: close,
                 directTextStylingEnabled: directTextStylingEnabled,
                 directParagraphStylingEnabled: directParagraphStylingEnabled,
