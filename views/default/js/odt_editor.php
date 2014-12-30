@@ -10,6 +10,7 @@ elgg.provide("elgg.odt_editor");
 
 elgg.odt_editor.init = function() {
     var editor,
+        documentUrl,
         fileGuid,
         fileName,
         isDocumentModifed = false;
@@ -55,6 +56,10 @@ elgg.odt_editor.init = function() {
         });
     }
 
+    function downloadOriginal() {
+        window.open(documentUrl, '_parent');
+    }
+
     function download() {
         editor.getDocumentAsByteArray(function(err, data) {
             if (err) {
@@ -68,13 +73,11 @@ elgg.odt_editor.init = function() {
     }
 
     var odtEditorDiv = document.getElementById("odt_editor");
-    var isReviewMode = odtEditorDiv && odtEditorDiv.getAttribute("data-editmode") === "review";
+    var isReadonlyMode = odtEditorDiv && odtEditorDiv.getAttribute("data-editmode") === "readonly";
 
-    var editorConfig = isReviewMode ? {
-        reviewModeEnabled: true,
-        undoRedoEnabled: true,
-        saveCallback: save,
-        downloadCallback: download,
+    var editorConfig = isReadonlyMode ? {
+        readonlyModeEnabled: true,
+        downloadCallback: downloadOriginal,
         userData: {
             fullName: elgg.get_logged_in_user_entity().name
         }
@@ -87,7 +90,7 @@ elgg.odt_editor.init = function() {
             fullName: elgg.get_logged_in_user_entity().name
         }
     };
-    var documentUrl = odtEditorDiv && odtEditorDiv.getAttribute("data-document-url");
+    documentUrl = odtEditorDiv && odtEditorDiv.getAttribute("data-document-url");
     fileGuid = odtEditorDiv && odtEditorDiv.getAttribute("data-guid");
     fileName = odtEditorDiv && odtEditorDiv.getAttribute("data-filename");
 
