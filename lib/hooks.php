@@ -6,7 +6,7 @@
  */
 
 /**
- * Take over the file page handler in some cases
+ * Take over the file page handler if this is some ODT file belonging to a group
  *
  * @param string $hook         the 'route' hook
  * @param string $type         for the 'file' page handler
@@ -23,13 +23,20 @@ function odt_editor_route_file_handler($hook, $type, $return_value, $params) {
     if (!empty($return_value) && is_array($return_value)) {
         $page = $return_value['segments'];
 
-        // TODO: check if $file belongs to group!
         if ($page[0] == "view") {
             $file = get_entity($page[1]);
-            if ($file && $file->getMimeType() == "application/vnd.oasis.opendocument.text") {
-                set_input('guid', $page[1]);
-                include(dirname(dirname(__FILE__)) . "/pages/file/odt_editor.php");
-                $result = false;
+            // an ODT file?
+            if ($file &&
+                ($file instanceof ElggFile) &&
+                ($file->getMimeType() == "application/vnd.oasis.opendocument.text")) {
+                // belongs to a group?
+                $container = $file->getContainerEntity();
+                if ($container instanceof ElggGroup) {
+                    // show in WebODF editor page
+                    set_input('guid', $page[1]);
+                    include(dirname(dirname(__FILE__)) . "/pages/file/odt_editor.php");
+                    $result = false;
+                }
             }
         }
     }
