@@ -7,7 +7,8 @@
 
 // Get variables
 $file_guid = (int) get_input('file_guid');
-$lock = (int) get_input('lock');
+$lock_guid = (int) get_input('lock_guid');
+$lock_set = ((int) get_input('lock_set')) == 1;
 $user_guid = elgg_get_logged_in_user_guid();
 
 // load original file object
@@ -30,19 +31,27 @@ if (!$file->canEdit()) {
 */
 
 // lock no longer owned?
-if ($file->odt_editor_lock_user != $user_guid && $lock) {
-    $locking_user_guid = (int)$file->odt_editor_lock_user;
-    $locking_user = get_entity($locking_user_guid);
-    $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("odt_editor:unknown_user");
-    register_error(elgg_echo('odt_editor:lock_lost_to', array($locking_user_name)));
+if ($file->odt_editor_lock_guid != $lock_guid) {
+    if ($lock_set) {
+        if ($file->odt_editor_lock_user != $user_guid) {
+            $locking_user_guid = (int)$file->odt_editor_lock_user;
+            $locking_user = get_entity($locking_user_guid);
+            $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("odt_editor:unknown_user");
+            register_error(elgg_echo('odt_editor:lock_lost_to', array($locking_user_name)));
+        } else {
+            register_error(elgg_echo('odt_editor:lock_lost_to_self'));
+        }
+    }
     forward(REFERER);
 }
 
 // update lock time
-if ($lock) {
+if ($lock_set) {
     $file->odt_editor_lock_time = time();
 } else {
     unset($file->odt_editor_lock_time);
+    unset($file->odt_editor_lock_guid);
+    unset($file->odt_editor_lock_user);
 }
 
 $file->save();

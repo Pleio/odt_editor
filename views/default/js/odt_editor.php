@@ -16,9 +16,10 @@ elgg.provide("elgg.odt_editor");
 elgg.odt_editor.init = function() {
     var editor,
         refreshFileLockTask,
-        refreshFileLockTaskTimeout = 5*60*1000,
+        refreshFileLockTaskTimeout = 5*1000,//60*1000,
         isLockedNeeded = true,
         isFileLockKnown = true,
+        lockGuid,
         documentUrl,
         fileGuid,
         fileName,
@@ -28,7 +29,8 @@ elgg.odt_editor.init = function() {
         elgg.action('odt_editor/refresh_filelock', {
             data: {
                 file_guid: fileGuid,
-                lock: isLockedNeeded
+                lock_guid: lockGuid,
+                lock_set: isLockedNeeded ? 1 : 0
             },
             error: function() {
                 elgg.system_message(elgg.echo('odt_editor:error:cannotrefreshlock_servernotreached'));
@@ -62,6 +64,7 @@ elgg.odt_editor.init = function() {
 
             formData.append("upload", blob);
             formData.append("file_guid", fileGuid);
+            formData.append("lock_guid", lockGuid);
             var token = {};
             elgg.security.addToken(token);
             Object.keys(token).forEach(function (k) {
@@ -126,6 +129,7 @@ elgg.odt_editor.init = function() {
     documentUrl = odtEditorDiv && odtEditorDiv.getAttribute("data-document-url");
     fileGuid = odtEditorDiv && odtEditorDiv.getAttribute("data-guid");
     fileName = odtEditorDiv && odtEditorDiv.getAttribute("data-filename");
+    lockGuid = odtEditorDiv && odtEditorDiv.getAttribute("data-lockguid");
 
     Wodo.createTextEditor("odt_editor", editorConfig, function (err, e) {
         editor = e;
@@ -145,6 +149,9 @@ elgg.odt_editor.init = function() {
                 }, refreshFileLockTaskTimeout);
                 refreshFileLockTask.trigger();
                 // be gently and on unloading try to remove the lock
+                // TODO: is too late for page reload, as the new page seems requested
+                // before the XHR from this handler gets called.
+                // no data loss, but not perfect
                 window.addEventListener('unload', function(event) {
                     isLockedNeeded = false;
                     refreshFileLockTask.triggerImmediate();
