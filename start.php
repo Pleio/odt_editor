@@ -1,6 +1,8 @@
 <?php
 /**
  * Start file for this plugin
+ *
+ * @package odt_editor
  */
 
 require_once(dirname(__FILE__) . "/lib/hooks.php");

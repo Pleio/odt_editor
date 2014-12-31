@@ -1,4 +1,9 @@
 <?php
+/**
+ * ODT editor JavaScript logic
+ *
+ * @package odt_editor
+ */
 
 # Using data-document-url on the editor div to get the url from where to download the document
 # TODO: is there another/better way to pass data from views to javascript methods?

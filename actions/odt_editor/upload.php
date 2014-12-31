@@ -1,9 +1,9 @@
 <?php
 /**
-* ODT file uploader/edit action
-*
-* @package odt_editor
-*/
+ * ODT file uploader/edit action
+ *
+ * @package odt_editor
+ */
 
 // Get variables
 $guid = (int) get_input('file_guid');

@@ -1,4 +1,9 @@
 <?php
+/**
+ * ODT editor CSS fixups
+ *
+ * @package odt_editor
+ */
 ?>
 @namespace office url(urn:oasis:names:tc:opendocument:xmlns:office:1.0);
 

@@ -1,6 +1,8 @@
 <?php
 /**
- * View a file
+ * ODT editor page body
+ *
+ * @package odt_editor
  */
 
 // need to be logged in

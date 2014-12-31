@@ -1,6 +1,6 @@
 <?php
 /**
- * All plugin hook callback functions are defined in this file
+ * ODT editor plugin hook callback functions
  *
  * @package odt_editor
  */
