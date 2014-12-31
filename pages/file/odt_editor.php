@@ -5,6 +5,9 @@
  * @package odt_editor
  */
 
+// 15 secs longer than lock refresh cycle, to avoid race conditions
+$lock_validity_duration = (5 * 60) + 15; // in seconds
+
 // need to be logged in
 gatekeeper();
 
@@ -16,7 +19,25 @@ $file = get_entity($file_guid);
 // TODO: is there a way to get the original filename when uploaded?
 $file_name = $file->getFilename();
 
-$edit_mode = $file->canEdit() ? "readwrite" : "readonly";
+$edit_mode = "readonly";
+if ($file->canEdit()) {
+    // currently locked?
+    if (isset($file->odt_editor_lock_time) &&
+        $file->odt_editor_lock_time + $lock_validity_duration >= time()) {
+        $locking_user_guid = (int)$file->odt_editor_lock_user;
+        $locking_user = get_entity($locking_user_guid);
+        $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("Unknown user");
+        system_message(elgg_echo("Document is currently locked for editing by: %s.", array($locking_user_name)));
+    } else {
+        $file->odt_editor_lock_time = time();
+        $file->odt_editor_lock_user = elgg_get_logged_in_user_guid();
+       if ($file->save()) {
+            $edit_mode = "readwrite";
+        } else {
+            register_error(elgg_echo("Could not create editing lock for the file."));
+        }
+    }
+}
 
 $title = $file->title;
 

@@ -15,10 +15,39 @@ elgg.provide("elgg.odt_editor");
 
 elgg.odt_editor.init = function() {
     var editor,
+        refreshFileLockTask,
+        refreshFileLockTaskTimeout = 5*60*1000,
+        isLockedNeeded = true,
+        isFileLockKnown = true,
         documentUrl,
         fileGuid,
         fileName,
         isDocumentModifed = false;
+
+    function refreshFileLock() {
+        elgg.action('odt_editor/refresh_filelock', {
+            data: {
+                file_guid: fileGuid,
+                lock: isLockedNeeded
+            },
+            error: function() {
+                elgg.system_message(elgg.echo('Editing lock could not be refreshed: error on talking to server.'));
+                isFileLockKnown = false;
+                refreshFileLockTask.trigger();
+            },
+            success: function(data) {
+                if (!isFileLockKnown) {
+                    isFileLockKnown = true;
+                    if (data.status == 0) {
+                        elgg.system_message(elgg.echo('Editing lock is restored.'));
+                    }
+                }
+                if (data.status == 0) {
+                    refreshFileLockTask.trigger();
+                }
+            }
+        });
+    }
 
     function save() {
         editor.getDocumentAsByteArray(function(err, data) {
@@ -110,6 +139,19 @@ elgg.odt_editor.init = function() {
                 elgg.register_error(err);
                 return;
             }
+            // lock the file to avoid editing conflicts
+            if (!isReadonlyMode) {
+                refreshFileLockTask = core.Task.createTimeoutTask(function () {
+                    refreshFileLock();
+                }, refreshFileLockTaskTimeout);
+                refreshFileLockTask.trigger();
+                // be gently and on unloading try to remove the lock
+                window.addEventListener('unload', function(event) {
+                    isLockedNeeded = false;
+                    refreshFileLockTask.triggerImmediate();
+                });
+            }
+
             window.addEventListener("beforeunload", function (e) {
                 var confirmationMessage = "no?";
 

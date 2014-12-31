@@ -6,14 +6,15 @@
  */
 
 // Get variables
-$guid = (int) get_input('file_guid');
+$file_guid = (int) get_input('file_guid');
+$user_guid = elgg_get_logged_in_user_guid();
 
 # TODO: just copied and reduced code to get started, not developed yet!
 # TODO: what about other properties like title, tags, etc?
 # also edit? and what about syncing with similar metadata in the ODT file itself?
 
 // load original file object
-$file = new ElggFile($guid);
+$file = new ElggFile($file_guid);
 if (!$file) {
     register_error(elgg_echo('file:cannotload'));
     forward(REFERER);
@@ -22,6 +23,14 @@ if (!$file) {
 // user must be able to edit file
 if (!$file->canEdit()) {
     register_error(elgg_echo('file:noaccess'));
+    forward(REFERER);
+}
+
+if ($file->odt_editor_lock_user != $user_guid) {
+    $locking_user_guid = (int)$file->odt_editor_lock_user;
+    $locking_user = get_entity($locking_user_guid);
+    $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("Unknown user");
+    register_error(elgg_echo('Cannot write file. The editing lock has been lost to: %s.', array($locking_user_name)));
     forward(REFERER);
 }
 
