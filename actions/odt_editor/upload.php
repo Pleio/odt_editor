@@ -29,8 +29,8 @@ if (!$file->canEdit()) {
 if ($file->odt_editor_lock_user != $user_guid) {
     $locking_user_guid = (int)$file->odt_editor_lock_user;
     $locking_user = get_entity($locking_user_guid);
-    $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("Unknown user");
-    register_error(elgg_echo('Cannot write file. The editing lock has been lost to: %s.', array($locking_user_name)));
+    $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("odt_editor:unknown_user");
+    register_error(elgg_echo('odt_editor:file:cannotwrite_lock_lost_to', array($locking_user_name)));
     forward(REFERER);
 }
 
@@ -51,4 +51,3 @@ move_uploaded_file($_FILES['upload']['tmp_name'], $file->getFilenameOnFilestore(
 $file->save();
 
 system_message(elgg_echo("file:saved"));
-// register_error(elgg_echo("file:uploadfailed"));

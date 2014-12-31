@@ -14,7 +14,7 @@ $user_guid = elgg_get_logged_in_user_guid();
 $file = new ElggFile($file_guid);
 if (!$file) {
     if ($lock) {
-        register_error(elgg_echo('The file that is edited got removed on the system.'));
+        register_error(elgg_echo('odt_editor:error:file_removed'));
     }
     forward(REFERER);
 }
@@ -33,8 +33,8 @@ if (!$file->canEdit()) {
 if ($file->odt_editor_lock_user != $user_guid && $lock) {
     $locking_user_guid = (int)$file->odt_editor_lock_user;
     $locking_user = get_entity($locking_user_guid);
-    $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("Unknown user");
-    register_error(elgg_echo('The editing lock has been lost to: '.$locking_user_name));
+    $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("odt_editor:unknown_user");
+    register_error(elgg_echo('odt_editor:lock_lost_to', array($locking_user_name)));
     forward(REFERER);
 }
 

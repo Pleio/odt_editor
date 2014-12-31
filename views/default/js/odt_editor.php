@@ -31,7 +31,7 @@ elgg.odt_editor.init = function() {
                 lock: isLockedNeeded
             },
             error: function() {
-                elgg.system_message(elgg.echo('Editing lock could not be refreshed: error on talking to server.'));
+                elgg.system_message(elgg.echo('odt_editor:error:cannotrefreshlock_servernotreached'));
                 isFileLockKnown = false;
                 refreshFileLockTask.trigger();
             },
@@ -39,7 +39,7 @@ elgg.odt_editor.init = function() {
                 if (!isFileLockKnown) {
                     isFileLockKnown = true;
                     if (data.status == 0) {
-                        elgg.system_message(elgg.echo('Editing lock is restored.'));
+                        elgg.system_message(elgg.echo('odt_editor:lock_restored'));
                     }
                 }
                 if (data.status == 0) {
@@ -73,16 +73,15 @@ elgg.odt_editor.init = function() {
                 contentType: false, // not "multipart/form-data", false lets browser do the right thing, ensures proper encoding of boundaryline
                 processData: false,
                 error: function() {
-                    elgg.system_message('Save failed!');
+                    elgg.system_message(elgg.echo('odt_editor:error:cannotwritefile_servernotreached'));
                 },
                 success: function(data) {
                     data = runtime.fromJson(data);
-                    elgg.system_message('Save result: '+data.status);
                     if (data.system_messages.error.length > 0) {
-                        elgg.system_message('Save error: '+data.system_messages.error[0]);
+                        elgg.system_message(data.system_messages.error[0]);
                     }
                     if (data.system_messages.success.length > 0) {
-                        elgg.system_message('Save success: '+data.system_messages.success[0]);
+                        elgg.system_message(data.system_messages.success[0]);
                         // TODO: isDocumentModifed = false;
                     }
                 }

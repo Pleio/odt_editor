@@ -26,15 +26,15 @@ if ($file->canEdit()) {
         $file->odt_editor_lock_time + $lock_validity_duration >= time()) {
         $locking_user_guid = (int)$file->odt_editor_lock_user;
         $locking_user = get_entity($locking_user_guid);
-        $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("Unknown user");
-        system_message(elgg_echo("Document is currently locked for editing by: %s.", array($locking_user_name)));
+        $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("odt_editor:unknown_user");
+        system_message(elgg_echo("odt_editor:document_locked_by", array($locking_user_name)));
     } else {
         $file->odt_editor_lock_time = time();
         $file->odt_editor_lock_user = elgg_get_logged_in_user_guid();
        if ($file->save()) {
             $edit_mode = "readwrite";
         } else {
-            register_error(elgg_echo("Could not create editing lock for the file."));
+            register_error(elgg_echo("odt_editor:error:cannotwritelock"));
         }
     }
 }

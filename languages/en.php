@@ -1,0 +1,23 @@
+<?php
+/**
+ * ODT editor translations
+ *
+ * @package odt_editor
+ */
+
+    $english = array(
+        // general
+        'odt_editor:error:file_removed' => "The file that is edited has been removed on the system.",
+        'odt_editor:unknown_user' => "Unknown user",
+        'odt_editor:lock_lost_to' => "The editing lock has been lost to: %s.",
+        'odt_editor:file:cannotwrite_lock_lost_to' => "Cannot write the file. The editing lock has been lost to: %s.",
+        'odt_editor:document_locked_by' => "Document is currently locked for editing by: %s.",
+        'odt_editor:error:cannotwritelock' => "Could not create editing lock for the file.",
+        'odt_editor:error:cannotrefreshlock_servernotreached' => "Editing lock could not be refreshed: error on talking to server.",
+        'odt_editor:lock_restored' => "Editing lock is restored.",
+        'odt_editor:error:cannotwritefile_servernotreached' => "The file could not be written: error on talking to server.",
+
+        '' => ""
+    );
+
+    add_translation("en", $english);
