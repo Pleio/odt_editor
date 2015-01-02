@@ -22,8 +22,7 @@ elgg.odt_editor.init = function() {
         lockGuid,
         documentUrl,
         fileGuid,
-        fileName,
-        isDocumentModifed = false;
+        fileName;
 
     function refreshFileLock() {
         elgg.action('odt_editor/refresh_filelock', {
@@ -85,7 +84,7 @@ elgg.odt_editor.init = function() {
                     }
                     if (data.system_messages.success.length > 0) {
                         elgg.system_message(data.system_messages.success[0]);
-                        // TODO: isDocumentModifed = false;
+                        editor.setDocumentUnmodified();
                     }
                 }
             });
@@ -133,10 +132,7 @@ elgg.odt_editor.init = function() {
 
     Wodo.createTextEditor("odt_editor", editorConfig, function (err, e) {
         editor = e;
-        // TODO: need to know about the state relativ to last time this was saved (also respect state by redo/undo)
-//         editor.addEventListener(Wodo.EVENT_METADATACHANGED, function() {
-//             isDocumentModifed = true;
-//         });
+
         editor.openDocumentFromUrl(documentUrl, function(err) {
             if (err) {
                 elgg.register_error(err);
@@ -156,18 +152,18 @@ elgg.odt_editor.init = function() {
                     isLockedNeeded = false;
                     refreshFileLockTask.triggerImmediate();
                 });
+
+                window.addEventListener("beforeunload", function (e) {
+                    var confirmationMessage = elgg.echo('odt_editor:unsaved_changes_exist');
+
+                    if (editor.isDocumentModified()) {
+                        // Gecko + IE
+                        (e || window.event).returnValue = confirmationMessage;
+                        // Webkit, Safari, Chrome etc.
+                        return confirmationMessage;
+                    }
+                });
             }
-
-            window.addEventListener("beforeunload", function (e) {
-                var confirmationMessage = "no?";
-
-                if (isDocumentModifed) {
-                    // Gecko + IE
-                    (e || window.event).returnValue = confirmationMessage;
-                    // Webkit, Safari, Chrome etc.
-                    return confirmationMessage;
-                }
-            });
 
         });
     });

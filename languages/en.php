@@ -19,6 +19,7 @@
         'odt_editor:error:cannotrefreshlock_servernotreached' => "Editing lock could not be refreshed: error on talking to server.",
         'odt_editor:lock_restored' => "Editing lock is restored.",
         'odt_editor:error:cannotwritefile_servernotreached' => "The file could not be written: error on talking to server.",
+        'odt_editor:unsaved_changes_exist' => "There are unsaved changes to the file.",
 
         '' => ""
     );
