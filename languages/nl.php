@@ -1,0 +1,24 @@
+<?php
+/**
+ * ODT editor translations
+ *
+ * @package odt_editor
+ * @author Bart Jeukendrup <bart@jeukendrup.nl>
+ */
+
+    $dutch = array(
+        // general
+        'odt_editor:error:file_removed' => "Het gewijzigde bestand is verwijderd van de server.",
+        'odt_editor:unknown_user' => "Onbekende gebruiker",
+        'odt_editor:lock_lost_to' => "Het bestand is geopend door: %s.",
+        'odt_editor:file:cannotwrite_lock_lost_to' => "Kan het bestand niet opslaan. Het bestand is op dit moment geopend door: %s.",
+        'odt_editor:document_locked_by' => "Het bestand is op dit moment geopend door %s en kan niet opgeslagen worden.",
+        'odt_editor:error:cannotwritelock' => "Kan het bestand niet vergrendelen.",
+        'odt_editor:error:cannotrefreshlock_servernotreached' => "De vergrendeling van het bestand kan niet ververst worden: kan geen verbinding maken met de server.",
+        'odt_editor:lock_restored' => "Bestandsvergrendeling is hersteld.",
+        'odt_editor:error:cannotwritefile_servernotreached' => "Kan niet schrijven naar het bestand: kan geen verbinding maken met de server.",
+
+        '' => ""
+    );
+
+    add_translation("nl", $dutch);
