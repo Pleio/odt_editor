@@ -111,7 +111,7 @@ var Wodo = Wodo || (function () {
         }
 
         return {
-            locale: WebODFEditorDojoLocale,
+            locale: elgg.get_language(),
             paths: {
                 "webodf/editor": installationPath,
                 "dijit":         installationPath + "/dijit",
@@ -164,7 +164,7 @@ var Wodo = Wodo || (function () {
             "webodf/editor/Tools",
             "webodf/editor/Translator"],
             function (BC, CP, FWZH, ES, T, Translator) {
-                var locale = navigator.language || "en-US",
+                var locale = elgg.get_language(),
                     editorBase = dojo.config && dojo.config.paths && dojo.config.paths["webodf/editor"],
                     translationsDir = editorBase + '/translations',
                     t;
