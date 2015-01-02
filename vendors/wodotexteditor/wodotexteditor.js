@@ -103,25 +103,6 @@ var Wodo = Wodo || (function () {
         return path;
     }());
 
-    window.dojoConfig = (function() {
-        var WebODFEditorDojoLocale = "C";
-
-        if (navigator && navigator.language && navigator.language.match(/^(de)/)) {
-            WebODFEditorDojoLocale = navigator.language.substr(0, 2);
-        }
-
-        return {
-            locale: elgg.get_language(),
-            paths: {
-                "webodf/editor": installationPath,
-                "dijit":         installationPath + "/dijit",
-                "dojox":         installationPath + "/dojox",
-                "dojo":          installationPath + "/dojo",
-                "resources":     installationPath + "/resources"
-            }
-        };
-    }());
-
     var /** @inner @type{!boolean} */
         isInitalized = false,
         /** @inner @type{!Array.<!function():undefined>} */
@@ -738,7 +719,34 @@ var Wodo = Wodo || (function () {
         var head = document.getElementsByTagName("head")[0],
             frag = document.createDocumentFragment(),
             link,
-            script;
+            script,
+            dojoLanguage;
+
+        // TODO: there needs to be a better mapping
+        dojoLanguage = (function (elggLanguage) {
+            var language;
+             if (elggLanguage === "de") {
+                language = "de_DE";
+            } else if (elggLanguage === "nl") {
+                language = "nl_NL";
+            } else if (elggLanguage === "en") {
+                language = "en_US";
+            } else {
+                language = "en_US";
+            }
+            return language;
+        })(elgg.get_language());
+
+        window.dojoConfig = {
+            locale: dojoLanguage,
+            paths: {
+                "webodf/editor": installationPath,
+                "dijit":         installationPath + "/dijit",
+                "dojox":         installationPath + "/dojox",
+                "dojo":          installationPath + "/dojo",
+                "resources":     installationPath + "/resources"
+            }
+        };
 
         // append two link and two script elements to the header
         link = document.createElement("link");
