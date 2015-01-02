@@ -16,7 +16,7 @@ elgg.provide("elgg.odt_editor");
 elgg.odt_editor.init = function() {
     var editor,
         refreshFileLockTask,
-        refreshFileLockTaskTimeout = 5*1000,//60*1000,
+        refreshFileLockTaskTimeout = 5*60*1000,
         isLockedNeeded = true,
         isFileLockKnown = true,
         lockGuid,

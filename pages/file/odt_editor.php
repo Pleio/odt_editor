@@ -6,7 +6,7 @@
  */
 
 // 15 secs longer than lock refresh cycle, to avoid race conditions
-$lock_validity_duration = 6;//(5 * 60) + 15; // in seconds
+$lock_validity_duration = (5 * 60) + 15; // in seconds
 
 // need to be logged in
 gatekeeper();
