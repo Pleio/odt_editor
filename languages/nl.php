@@ -20,6 +20,7 @@
         'odt_editor:error:cannotrefreshlock_servernotreached' => "De vergrendeling van het bestand kan niet ververst worden: kan geen verbinding maken met de server.",
         'odt_editor:lock_restored' => "Bestandsvergrendeling is hersteld.",
         'odt_editor:error:cannotwritefile_servernotreached' => "Kan niet schrijven naar het bestand: kan geen verbinding maken met de server.",
+        'odt_editor:unsaved_changes_exist' => "Dit bestand bevat niet-opgeslagen wijzigingen.",
 
         '' => ""
     );
