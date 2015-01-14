@@ -5,9 +5,11 @@
  * @package odt_editor
  */
 
+elgg_load_library('odt_editor:locking');
+
 // Get variables
 $file_guid = (int) get_input('file_guid');
-$lock_guid = (int) get_input('lock_guid');
+$lock_guid = get_input('lock_guid');
 $user_guid = elgg_get_logged_in_user_guid();
 
 # TODO: just copied and reduced code to get started, not developed yet!
@@ -27,10 +29,10 @@ if (!$file->canEdit()) {
     forward(REFERER);
 }
 
-if ($file->odt_editor_lock_guid != $lock_guid) {
-    if ($file->odt_editor_lock_user != $user_guid) {
-        $locking_user_guid = (int)$file->odt_editor_lock_user;
-        $locking_user = get_entity($locking_user_guid);
+if (odt_editor_locking_lock_guid($file) != $lock_guid) {
+    $lock_owner_guid = odt_editor_locking_lock_owner_guid($file);
+    if ($lock_owner_guid != $user_guid) {
+        $locking_user = get_entity($lock_owner_guid);
         $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("odt_editor:unknown_user");
         register_error(elgg_echo('odt_editor:file:cannotwrite_lock_lost_to', array($locking_user_name)));
     } else {

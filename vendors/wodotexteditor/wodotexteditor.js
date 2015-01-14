@@ -267,6 +267,7 @@ var Wodo = Wodo || (function () {
             //
             loadOdtFile = editorOptions.loadCallback,
             saveOdtFile = editorOptions.saveCallback,
+            saveAsOdtFile = editorOptions.saveAsCallback,
             downloadOdtFile = editorOptions.downloadCallback,
             close =       editorOptions.closeCallback,
             //
@@ -688,6 +689,7 @@ var Wodo = Wodo || (function () {
                 onToolDone: setFocusToOdfCanvas,
                 loadOdtFile: loadOdtFile,
                 saveOdtFile: saveOdtFile,
+                saveAsOdtFile: saveAsOdtFile,
                 downloadOdtFile: downloadOdtFile,
                 close: close,
                 directTextStylingEnabled: directTextStylingEnabled,

@@ -5,8 +5,7 @@
  * @package odt_editor
  */
 
-// 15 secs longer than lock refresh cycle, to avoid race conditions
-$lock_validity_duration = (5 * 60) + 15; // in seconds
+elgg_load_library('odt_editor:locking');
 
 // need to be logged in
 gatekeeper();
@@ -22,24 +21,19 @@ $user_guid = elgg_get_logged_in_user_guid();
 
 $edit_mode = "readonly";
 if ($file->canEdit()) {
-    $now = time();
     // currently locked?
-    if (isset($file->odt_editor_lock_time) &&
-        ($file->odt_editor_lock_time + $lock_validity_duration >= $now)) {
-        if ($file->odt_editor_lock_user != $user_guid) {
-            $locking_user_guid = (int)$file->odt_editor_lock_user;
-            $locking_user = get_entity($locking_user_guid);
+    if (odt_editor_locking_is_locked($file)) {
+        $lock_owner_guid = odt_editor_locking_lock_owner_guid($file);
+        if ($lock_owner_guid != $user_guid) {
+            $locking_user = get_entity($lock_owner_guid);
             $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("odt_editor:unknown_user");
             system_message(elgg_echo("odt_editor:document_locked_by", array($locking_user_name)));
         } else {
             register_error(elgg_echo('odt_editor:document_locked_by_self'));
         }
     } else {
-        $lock_guid = $now; // TODO: or some timereset-safer base?
-        $file->odt_editor_lock_time = $now;
-        $file->odt_editor_lock_user = elgg_get_logged_in_user_guid();
-        $file->odt_editor_lock_guid = $lock_guid;
-       if ($file->save()) {
+        $lock_guid = odt_editor_locking_create_lock($file, $user_guid);
+        if ($file->save()) {
             $edit_mode = "readwrite";
         } else {
             register_error(elgg_echo("odt_editor:error:cannotwritelock"));
@@ -53,6 +47,9 @@ elgg_load_js('FileSaver');
 elgg_load_js('wodotexteditor');
 elgg_load_js('elgg.odt_editor');
 elgg_load_css('elgg.odt_editor_dojo_overwrite');
+elgg_load_js('lightbox');
+elgg_load_css('lightbox');
+
 
 $download_url = elgg_get_site_url() . "file/download/{$file_guid}";
 

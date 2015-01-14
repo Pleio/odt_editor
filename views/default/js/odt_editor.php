@@ -50,7 +50,72 @@ elgg.odt_editor.init = function() {
         });
     }
 
-    function save() {
+    function saveAsAction() {
+        function doSaveAs(form) {
+            $(form).find("input[type='submit']").hide();
+
+            editor.getDocumentAsByteArray(function(err, data) {
+                if (err) {
+                    elgg.register_error(err);
+                    $.fancybox.close();
+                    return;
+                }
+
+                var blob = new Blob([data.buffer], {type: "application/vnd.oasis.opendocument.text"});
+                var formData = new FormData();
+
+                formData.append("upload", blob);
+                formData.append("old_file_guid", fileGuid);
+                formData.append("old_lock_guid", lockGuid);
+                formData.append("title", $(form).find("input[name='title']").val());
+                formData.append("tags", $(form).find("input[name='tags']").val());
+                formData.append("access_id", $(form).find("input[name='access_id']").val());
+                var token = {};
+                elgg.security.addToken(token);
+                Object.keys(token).forEach(function (k) {
+                    formData.append(k, token[k]);
+                });
+
+                elgg.post("action/odt_editor/upload_asnew", {
+                    data: formData,
+                    contentType: false, // not "multipart/form-data", false lets browser do the right thing, ensures proper encoding of boundaryline
+                    processData: false,
+                    error: function() {
+                        elgg.system_message(elgg.echo('odt_editor:error:cannotwritefile_servernotreached'));
+                        $.fancybox.close();
+                    },
+                    success: function(data) {
+                        var reply;
+
+                        data = runtime.fromJson(data);
+                        if (data.system_messages.error.length > 0) {
+                            elgg.system_message(data.system_messages.error[0]);
+                        }
+                        if (data.system_messages.success.length > 0) {
+                            elgg.system_message(data.system_messages.success[0]);
+                            editor.setDocumentUnmodified();
+                            // update data for current file
+                            reply = data.output;
+                            lockGuid = reply.lock_guid;
+                            fileGuid = reply.file_guid;
+                            documentUrl = reply.document_url;
+                            fileName = reply.file_name;
+                            // TODO: update title of window with new document title
+                        }
+                        $.fancybox.close();
+                    }
+                });
+            });
+        }
+        $.fancybox({
+            href: elgg.get_site_url() + "odt_editor/saveas/" + fileGuid,
+            onComplete: function () {
+                elgg.odt_editor.doSaveAs = doSaveAs;
+            }
+        });
+    }
+
+    function saveAction() {
         editor.getDocumentAsByteArray(function(err, data) {
             if (err) {
                 elgg.register_error(err);
@@ -119,7 +184,8 @@ elgg.odt_editor.init = function() {
     } : {
         allFeaturesEnabled: true,
         zoomingEnabled: false,
-        saveCallback: save,
+        saveCallback: saveAction,
+        saveAsCallback: saveAsAction,
         downloadCallback: download,
         userData: {
             fullName: elgg.get_logged_in_user_entity().name
