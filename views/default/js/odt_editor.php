@@ -22,7 +22,8 @@ elgg.odt_editor.init = function() {
         lockGuid,
         documentUrl,
         fileGuid,
-        fileName;
+        fileName,
+        elggSiteName;
 
     function refreshFileLock() {
         elgg.action('odt_editor/refresh_filelock', {
@@ -61,15 +62,18 @@ elgg.odt_editor.init = function() {
                     return;
                 }
 
+                var title = $(form).find("input[name='title']").val();
+                var tags = $(form).find("input[name='tags']").val();
+                var access_id = $(form).find("input[name='access_id']").val();
                 var blob = new Blob([data.buffer], {type: "application/vnd.oasis.opendocument.text"});
                 var formData = new FormData();
 
                 formData.append("upload", blob);
                 formData.append("old_file_guid", fileGuid);
                 formData.append("old_lock_guid", lockGuid);
-                formData.append("title", $(form).find("input[name='title']").val());
-                formData.append("tags", $(form).find("input[name='tags']").val());
-                formData.append("access_id", $(form).find("input[name='access_id']").val());
+                formData.append("title", title);
+                formData.append("tags", tags);
+                formData.append("access_id", access_id);
                 var token = {};
                 elgg.security.addToken(token);
                 Object.keys(token).forEach(function (k) {
@@ -85,7 +89,7 @@ elgg.odt_editor.init = function() {
                         $.fancybox.close();
                     },
                     success: function(data) {
-                        var reply;
+                        var reply, windowTitle;
 
                         data = runtime.fromJson(data);
                         if (data.system_messages.error.length > 0) {
@@ -100,7 +104,10 @@ elgg.odt_editor.init = function() {
                             fileGuid = reply.file_guid;
                             documentUrl = reply.document_url;
                             fileName = reply.file_name;
-                            // TODO: update title of window with new document title
+                            // update title of window with new document title
+                            // TODO: window title generation depends on "page/elements/head", so pattern could be different
+                            // needs better support in elgg
+                            document.title = title ? (elggSiteName + ": " + title) : elggSiteName;
                         }
                         $.fancybox.close();
                     }
@@ -195,6 +202,7 @@ elgg.odt_editor.init = function() {
     fileGuid = odtEditorDiv && odtEditorDiv.getAttribute("data-guid");
     fileName = odtEditorDiv && odtEditorDiv.getAttribute("data-filename");
     lockGuid = odtEditorDiv && odtEditorDiv.getAttribute("data-lockguid");
+    elggSiteName = odtEditorDiv && odtEditorDiv.getAttribute("data-sitename");
 
     Wodo.createTextEditor("odt_editor", editorConfig, function (err, e) {
         editor = e;

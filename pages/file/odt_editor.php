@@ -52,9 +52,10 @@ elgg_load_css('lightbox');
 
 
 $download_url = elgg_get_site_url() . "file/download/{$file_guid}";
+$sitename = elgg_get_config('sitename');
 
 // TODO: the header bar size of 28px should be fetched from somewhere, to support themes
-$content = "<div class=\"notranslate\" translate=\"no\" id=\"odt_editor\" style=\"width: 100%;height: calc(100% - 28px); margin-top: 28px; padding: 0;\" data-document-url=\"$download_url\" data-guid=\"$file_guid\" data-filename=\"$file_name\" data-editmode=\"$edit_mode\" data-lockguid=\"$lock_guid\"></div>";
+$content = "<div class=\"notranslate\" translate=\"no\" id=\"odt_editor\" style=\"width: 100%;height: calc(100% - 28px); margin-top: 28px; padding: 0;\" data-document-url=\"$download_url\" data-guid=\"$file_guid\" data-filename=\"$file_name\" data-editmode=\"$edit_mode\" data-lockguid=\"$lock_guid\" data-sitename=\"$sitename\"></div>";
 
 $body = $content;
 
