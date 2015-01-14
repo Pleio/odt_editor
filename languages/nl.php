@@ -21,6 +21,8 @@
         'odt_editor:lock_restored' => "Bestandsvergrendeling is hersteld.",
         'odt_editor:error:cannotwritefile_servernotreached' => "Kan niet schrijven naar het bestand: kan geen verbinding maken met de server.",
         'odt_editor:unsaved_changes_exist' => "Dit bestand bevat niet-opgeslagen wijzigingen.",
+        'odt_editor:saveas' => "Sla op als nieuw document",
+        'odt_editor:title:saveas' => "​Opslaan als nieuw document.",
 
         '' => ""
     );
