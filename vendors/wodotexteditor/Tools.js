@@ -218,7 +218,7 @@ define("webodf/editor/Tools", [
                     saveAsButton = new Button({
                         label: tr('Save as...'),
                         showLabel: false,
-                        iconClass: 'dijitEditorIcon dijitEditorIconSave',
+                        iconClass: 'webodfeditor-dijitSaveAsIcon',
                         style: {
                             float: 'left'
                         },
