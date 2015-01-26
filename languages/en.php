@@ -22,6 +22,7 @@
         'odt_editor:unsaved_changes_exist' => "There are unsaved changes to the file.",
         'odt_editor:saveas' => "Save as new document",
         'odt_editor:title:saveas' => "Save as a new document.",
+        'odt_editor:error:notitleentered' => "Please enter a title.",
 
         '' => ""
     );

@@ -53,6 +53,12 @@ elgg.odt_editor.init = function() {
 
     function saveAsAction() {
         function doSaveAs(form) {
+            var title = $(form).find("input[name='title']").val();
+            if (!title) {
+                elgg.system_message(elgg.echo('odt_editor:error:notitleentered'));
+                return;
+            }
+
             $(form).find("input[type='submit']").hide();
 
             editor.getDocumentAsByteArray(function(err, data) {

@@ -8,7 +8,7 @@
 $old_file_guid = elgg_extract('file_guid', $vars, null);
 $old_file = new ElggFile($old_file_guid);
 
-$title = $old_file ? $old_file->title : "";
+$title = "";
 $tags = $old_file ? $old_file->tags : array();
 $access_id = $old_file ? $old_file->access_id : ACCESS_DEFAULT;
 
