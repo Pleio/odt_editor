@@ -63,5 +63,3 @@ print(json_encode($reply));
 if ($old_file && odt_editor_locking_lock_guid($old_file) == $old_lock_guid && odt_editor_locking_lock_owner_guid($old_file) == $user_guid) {
     odt_editor_locking_remove_lock($old_file);
 }
-
-$file->save();
