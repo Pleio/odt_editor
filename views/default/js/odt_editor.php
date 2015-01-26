@@ -23,6 +23,7 @@ elgg.odt_editor.init = function() {
         documentUrl,
         fileGuid,
         fileName,
+        containerGuid,
         elggSiteName;
 
     function refreshFileLock() {
@@ -77,6 +78,7 @@ elgg.odt_editor.init = function() {
                 formData.append("upload", blob);
                 formData.append("old_file_guid", fileGuid);
                 formData.append("old_lock_guid", lockGuid);
+                formData.append("container_guid", containerGuid);
                 formData.append("title", title);
                 formData.append("tags", tags);
                 formData.append("access_id", access_id);
@@ -207,6 +209,7 @@ elgg.odt_editor.init = function() {
     documentUrl = odtEditorDiv && odtEditorDiv.getAttribute("data-document-url");
     fileGuid = odtEditorDiv && odtEditorDiv.getAttribute("data-guid");
     fileName = odtEditorDiv && odtEditorDiv.getAttribute("data-filename");
+    containerGuid = odtEditorDiv && odtEditorDiv.getAttribute("data-containerguid");
     lockGuid = odtEditorDiv && odtEditorDiv.getAttribute("data-lockguid");
     elggSiteName = odtEditorDiv && odtEditorDiv.getAttribute("data-sitename");
 

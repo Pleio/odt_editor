@@ -17,6 +17,15 @@ $title = htmlspecialchars(get_input('title', '', false), ENT_QUOTES, 'UTF-8');
 $description = ""; // TODO: get_input("description");
 $tags = explode(",", get_input("tags"));
 $access_id = (int) get_input("access_id", ACCESS_DEFAULT);
+$container_guid = (int) get_input('container_guid');
+
+// fallback to user if somebody deleted the group container behind our back
+// TODO: ask the user for another group container instead
+$container = get_entity($container_guid);
+
+if (!$container) {
+    $container_guid = elgg_get_logged_in_user_guid();
+}
 
 // load original file object
 $old_file = new ElggFile($old_file_guid);
@@ -26,7 +35,7 @@ $file = new ElggFile();
 $file->title = $title;
 $file->access_id = $access_id;
 $file->description = $description;
-$file->container_guid = $old_file ? $old_file->container_guid : $user_guid; // TODO: get group id from client
+$file->container_guid = $container_guid;
 $file->tags = $tags;
 $file->setMimeType("application/vnd.oasis.opendocument.text");
 $file->simpletype = "document";
