@@ -27,6 +27,13 @@ elgg.odt_editor.init = function() {
         elggSiteName;
 
     function refreshFileLock() {
+        // new document?
+        if (fileGuid == 0) {
+            // no lock, just trigger next attempt
+            refreshFileLockTask.trigger();
+            return;
+        }
+
         elgg.action('odt_editor/refresh_filelock', {
             data: {
                 file_guid: fileGuid,
@@ -131,6 +138,12 @@ elgg.odt_editor.init = function() {
     }
 
     function saveAction() {
+        // Temporary prototype code, save button might be rather disabled
+        // new document?
+        if (fileGuid == 0) {
+            saveAsAction();
+            return;
+        }
         editor.getDocumentAsByteArray(function(err, data) {
             if (err) {
                 elgg.register_error(err);

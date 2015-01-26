@@ -14,35 +14,46 @@ gatekeeper();
 group_gatekeeper();
 
 $file_guid = get_input('guid');
-$file = get_entity($file_guid);
-// TODO: is there a way to get the original filename when uploaded?
-$file_name = $file->getFilename();
-$user_guid = elgg_get_logged_in_user_guid();
 
-$edit_mode = "readonly";
-if ($file->canEdit()) {
-    // currently locked?
-    if (odt_editor_locking_is_locked($file)) {
-        $lock_owner_guid = odt_editor_locking_lock_owner_guid($file);
-        if ($lock_owner_guid != $user_guid) {
-            $locking_user = get_entity($lock_owner_guid);
-            $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("odt_editor:unknown_user");
-            system_message(elgg_echo("odt_editor:document_locked_by", array($locking_user_name)));
+// new document?
+if ($file == 0) {
+    $title = elgg_echo("odt_editor:newdocument");
+    $file_name = "document.odt";
+    $container_guid = get_input('container_guid');
+    $download_url = elgg_get_site_url() . "odt_editor/gettemplate";
+    $edit_mode = "readwrite";
+} else {
+    $file = get_entity($file_guid);
+    // TODO: is there a way to get the original filename when uploaded?
+    $file_name = $file->getFilename();
+    $user_guid = elgg_get_logged_in_user_guid();
+
+    $edit_mode = "readonly";
+    if ($file->canEdit()) {
+        // currently locked?
+        if (odt_editor_locking_is_locked($file)) {
+            $lock_owner_guid = odt_editor_locking_lock_owner_guid($file);
+            if ($lock_owner_guid != $user_guid) {
+                $locking_user = get_entity($lock_owner_guid);
+                $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("odt_editor:unknown_user");
+                system_message(elgg_echo("odt_editor:document_locked_by", array($locking_user_name)));
+            } else {
+                register_error(elgg_echo('odt_editor:document_locked_by_self'));
+            }
         } else {
-            register_error(elgg_echo('odt_editor:document_locked_by_self'));
-        }
-    } else {
-        $lock_guid = odt_editor_locking_create_lock($file, $user_guid);
-        if ($file->save()) {
-            $edit_mode = "readwrite";
-        } else {
-            register_error(elgg_echo("odt_editor:error:cannotwritelock"));
+            $lock_guid = odt_editor_locking_create_lock($file, $user_guid);
+            if ($file->save()) {
+                $edit_mode = "readwrite";
+            } else {
+                register_error(elgg_echo("odt_editor:error:cannotwritelock"));
+            }
         }
     }
-}
 
-$title = $file->title;
-$container_guid = $file->container_guid;
+    $title = $file->title;
+    $container_guid = $file->container_guid;
+    $download_url = elgg_get_site_url() . "file/download/{$file_guid}";
+}
 
 elgg_load_js('FileSaver');
 elgg_load_js('wodotexteditor');
@@ -52,7 +63,6 @@ elgg_load_js('lightbox');
 elgg_load_css('lightbox');
 
 
-$download_url = elgg_get_site_url() . "file/download/{$file_guid}";
 $sitename = elgg_get_config('sitename');
 
 // TODO: the header bar size of 28px should be fetched from somewhere, to support themes

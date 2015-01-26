@@ -8,7 +8,7 @@
 elgg_load_library('odt_editor:locking');
 
 // Get variables
-$old_file_guid = (int) get_input('old_file_guid');
+$old_file_guid = (int) get_input('old_file_guid', 0);
 $old_lock_guid = get_input('old_lock_guid');
 
 $user_guid = elgg_get_logged_in_user_guid();
@@ -22,13 +22,9 @@ $container_guid = (int) get_input('container_guid');
 // fallback to user if somebody deleted the group container behind our back
 // TODO: ask the user for another group container instead
 $container = get_entity($container_guid);
-
 if (!$container) {
     $container_guid = elgg_get_logged_in_user_guid();
 }
-
-// load original file object
-$old_file = new ElggFile($old_file_guid);
 
 // create new file object
 $file = new ElggFile();
@@ -69,6 +65,10 @@ $reply = array(
 print(json_encode($reply));
 
 // remove lock from old file
-if ($old_file && odt_editor_locking_lock_guid($old_file) == $old_lock_guid && odt_editor_locking_lock_owner_guid($old_file) == $user_guid) {
-    odt_editor_locking_remove_lock($old_file);
+if ($old_file_guid != 0) {
+    $old_file = new ElggFile($old_file_guid);
+
+    if ($old_file && odt_editor_locking_lock_guid($old_file) == $old_lock_guid && odt_editor_locking_lock_owner_guid($old_file) == $user_guid) {
+        odt_editor_locking_remove_lock($old_file);
+    }
 }

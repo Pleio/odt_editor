@@ -23,6 +23,7 @@
         'odt_editor:saveas' => "Save as new document",
         'odt_editor:title:saveas' => "Save as a new document.",
         'odt_editor:error:notitleentered' => "Please enter a title.",
+        'odt_editor:newdocument' => "New document",
 
         '' => ""
     );
