@@ -134,6 +134,8 @@ elgg.odt_editor.init = function() {
             href: elgg.get_site_url() + "odt_editor/saveas/" + fileGuid,
             onComplete: function () {
                 elgg.odt_editor.doSaveAs = doSaveAs;
+                // set focus to title field initially TODO: find better/standard way
+                $("#odt_editor_form_saveas input[name='title']").focus();
             }
         });
     }
