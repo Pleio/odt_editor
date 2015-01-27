@@ -123,6 +123,7 @@ elgg.odt_editor.init = function() {
                             // TODO: window title generation depends on "page/elements/head", so pattern could be different
                             // needs better support in elgg
                             document.title = title ? (elggSiteName + ": " + title) : elggSiteName;
+                            history.replaceState( {}, "", elgg.get_site_url()+"file/view/"+fileGuid);
                         }
                         $.fancybox.close();
                     }
