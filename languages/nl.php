@@ -23,6 +23,8 @@
         'odt_editor:unsaved_changes_exist' => "Dit bestand bevat niet-opgeslagen wijzigingen.",
         'odt_editor:saveas' => "Sla op als nieuw document",
         'odt_editor:title:saveas' => "​Opslaan als nieuw document.",
+        'odt_editor:error:notitleentered' => "De titel ontbreekt.",
+        'odt_editor:newdocument' => "Nieuw document",
 
         '' => ""
     );
