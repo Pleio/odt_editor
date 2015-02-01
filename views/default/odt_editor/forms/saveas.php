@@ -6,12 +6,16 @@
  */
 
 $old_file_guid = elgg_extract('file_guid', $vars, null);
-$old_file = new ElggFile($old_file_guid);
 
 $title = "";
-$tags = $old_file ? $old_file->tags : array();
-$access_id = $old_file ? $old_file->access_id : ACCESS_DEFAULT;
 
+if ($old_file_guid != 0) {
+	$old_file = new ElggFile($old_file_guid);
+	$tags = $old_file ? $old_file->tags : array();
+	$access_id = $old_file ? $old_file->access_id : ACCESS_DEFAULT;
+} else {
+	$access_id = ACCESS_DEFAULT;
+}
 
 $form_body .= '<div>';
 $form_body .= '<label>' . elgg_echo('title') . '</label><br />';

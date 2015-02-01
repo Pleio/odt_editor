@@ -78,7 +78,7 @@ elgg.odt_editor.init = function() {
 
                 var title = $(form).find("input[name='title']").val();
                 var tags = $(form).find("input[name='tags']").val();
-                var access_id = $(form).find("input[name='access_id']").val();
+                var access_id = $(form).find("select[name='access_id']").val();
                 var blob = new Blob([data.buffer], {type: "application/vnd.oasis.opendocument.text"});
                 var formData = new FormData();
 
@@ -131,7 +131,7 @@ elgg.odt_editor.init = function() {
             });
         }
         $.fancybox({
-            href: elgg.get_site_url() + "odt_editor/saveas/" + fileGuid,
+            href: elgg.get_site_url() + "odt_editor/saveas/" + fileGuid + "?container_guid=" + containerGuid,
             onComplete: function () {
                 elgg.odt_editor.doSaveAs = doSaveAs;
                 // set focus to title field initially TODO: find better/standard way

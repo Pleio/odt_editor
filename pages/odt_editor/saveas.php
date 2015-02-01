@@ -12,5 +12,11 @@ gatekeeper();
 group_gatekeeper();
 
 $file_guid = (int) get_input('guid');
+$container_guid = (int) get_input('container_guid');
+
+$container = get_entity($container_guid);
+if ($container instanceof ElggGroup) {
+	elgg_set_page_owner_guid($container->guid);
+}
 
 echo elgg_view("odt_editor/forms/saveas", array("file_guid" => $file_guid));
