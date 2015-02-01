@@ -26,14 +26,18 @@ function odt_editor_page_handler($page) {
             break;
         case 'create':
             $container = get_entity($page[1]);
-            if ($container instanceof ElggGroup) {
-                // show new document in WebODF editor page
-                // 0 as indicator for new document
-                set_input('guid', 0);
-                set_input('container_guid', $page[1]);
-                include "$odt_editor_pages_dir/file/odt_editor.php";
-                $result = false;
+
+            if (!$container) {
+                $container = get_loggedin_userid();
             }
+
+            // show new document in WebODF editor page
+            // 0 as indicator for new document
+            set_input('guid', 0);
+            set_input('container_guid', $page[1]);
+            include "$odt_editor_pages_dir/file/odt_editor.php";
+            $result = false;
+
             break;
         case 'gettemplate':
              include "$odt_editor_pages_dir/odt_editor/gettemplate.php";
