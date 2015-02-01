@@ -33,13 +33,10 @@ if ($file == 0) {
         // currently locked?
         if (odt_editor_locking_is_locked($file)) {
             $lock_owner_guid = odt_editor_locking_lock_owner_guid($file);
-            if ($lock_owner_guid != $user_guid) {
-                $locking_user = get_entity($lock_owner_guid);
-                $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("odt_editor:unknown_user");
-                system_message(elgg_echo("odt_editor:document_locked_by", array($locking_user_name)));
-            } else {
-                register_error(elgg_echo('odt_editor:document_locked_by_self'));
-            }
+            $locking_user = get_entity($lock_owner_guid);
+            $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("odt_editor:unknown_user");
+
+            system_message(elgg_echo("odt_editor:document_locked_by", array($locking_user_name)));
         } else {
             $lock_guid = odt_editor_locking_create_lock($file, $user_guid);
             if ($file->save()) {

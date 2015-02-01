@@ -68,6 +68,11 @@ function odt_editor_locking_lock_owner_guid($file) {
  * @return bool
  */
 function odt_editor_locking_is_locked($file) {
+    // do not lock file if the editor is the same
+    if ($file->odt_editor_lock_guid == elgg_get_logged_in_user_guid()) {
+        return false;
+    }
+
     // 15 secs longer than lock refresh cycle, to avoid race conditions
     $odt_editor_locking_lock_validity_duration = (5 * 60) + 15; // in seconds
 
