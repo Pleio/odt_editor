@@ -57,7 +57,8 @@ function odt_editor_file_menu_title_hook($hook, $type, $return_value, $params) {
             "name" => "view",
             "text" => elgg_echo('odt_editor:newdocument'),
             "href" => "odt_editor/create/" . (elgg_get_page_owner_guid() == 0 ? elgg_get_logged_in_user_guid() : elgg_get_page_owner_guid()),
-            "class" => "elgg-button elgg-button-action",            
+            "class" => "elgg-button elgg-button-action",
+            "target" => "_blank",
             "priority" => 50
         ));
     }
