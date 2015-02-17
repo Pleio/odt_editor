@@ -1,0 +1,111 @@
+diff --git a/vendors/wodotexteditor/Tools.js b/vendors/wodotexteditor/Tools.js
+index 9cb7351..a735d43 100644
+--- a/vendors/wodotexteditor/Tools.js
++++ b/vendors/wodotexteditor/Tools.js
+@@ -50,11 +50,12 @@ define("webodf/editor/Tools", [
+                 onToolDone = args.onToolDone,
+                 loadOdtFile = args.loadOdtFile,
+                 saveOdtFile = args.saveOdtFile,
++                saveAsOdtFile = args.saveAsOdtFile,
+                 downloadOdtFile = args.downloadOdtFile,
+                 close = args.close,
+                 toolbar,
+                 loadButton, saveButton, closeButton, aboutButton,
+-                downloadButton,
++                saveAsButton, downloadButton,
+                 formatDropDownMenu, formatMenuButton,
+                 paragraphStylesMenuItem, paragraphStylesDialog, simpleStyles, currentStyle,
+                 zoomSlider,
+@@ -212,6 +213,20 @@ define("webodf/editor/Tools", [
+                     saveButton.placeAt(toolbar);
+                 }
+ 
++                // SaveAs
++                if (saveAsOdtFile) {
++                    saveAsButton = new Button({
++                        label: tr('Save as...'),
++                        showLabel: false,
++                        iconClass: 'webodfeditor-dijitSaveAsIcon',
++                        onClick: function () {
++                            saveAsOdtFile();
++                            onToolDone();
++                        }
++                    });
++                    saveAsButton.placeAt(toolbar);
++                }
++
+                 // Download
+                 if (downloadOdtFile) {
+                     downloadButton = new Button({
+diff --git a/vendors/wodotexteditor/images/saveas.png b/vendors/wodotexteditor/images/saveas.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..2f874b7d7b9b073ab5175de2b0e9eec82649e266
+GIT binary patch
+literal 564
+zcmV-40?Yl0P)<h;3K|Lk000e1NJLTq000sI000sQ1^@s6R?d!B00006VoOIv0RI60
+z0RN!9r;`8x0qIFZK~y-)&6G<>R8btpf7c4T6htt%s&xi#s)-gZf+QjmET~2|S!oXp
+zLszYhilIW<2o|--vLVYf2_huO;Nl%5LW)Tks3{`Inb5I2_n~*@w3z19@j3?4q7VM?
+ze|+cTJDdmnBWR`M_1kx1)R>TiY$n5wZPkGV@mEu<3x#C8yLLNUYBm>j>@TM1={hR1
+zjwiB?C*tO~$QS&w5jV#r_ww~V0Z;)jKbPXziPPMPwgNCVnZ$N&B`hy5^RdZf!0Ac=
+zFOvY^_^C78x_AUO?!#e?BvooYfYMux3V?wpZ}2h+=I2thv~{9?7$WcbGHeHI2U!DH
+zvuUi^wCbomI;08T6OsMJX3N=g+`M#v`p(;B9e9Px;MM>>g&K)H?4#*mvEJJpVdP39
+zhg(lBd+gIQi-Z7nwfA%H+97K8tOY>$3*0rlz~btyJF(ot(vC`~>v+KPs|^T1L!)=V
+zVED%QKVC>hC~M~d2)8`~pt++9fZo_k$!Th+U0%rcb!8BHY>*u7QF>n!gIpLkmK0MQ
+z&A1BytY5tffbOU7<xG4we`dPEEg6tP->gDFa8uQ9N4%o=zEbI&oCD;9{_8@PLs&Ou
+zJbN)kc*FMq$Ia!`*FQ4xQS=X*fAxjjk47~9JNy7#xBBS)xc?sj0000<MNUMnLSTYs
+C7YQ{0
+
+literal 0
+HcmV?d00001
+
+diff --git a/vendors/wodotexteditor/wodotexteditor.css b/vendors/wodotexteditor/wodotexteditor.css
+index 3f641a6..0c58b92 100644
+--- a/vendors/wodotexteditor/wodotexteditor.css
++++ b/vendors/wodotexteditor/wodotexteditor.css
+@@ -75,6 +75,14 @@
+    text-align: center;
+ }
+ 
++.webodfeditor-dijitSaveAsIcon {
++   background-image: url("images/saveas.png");
++   background-repeat: no-repeat;
++   width: 18px;
++   height: 18px;
++   text-align: center;
++}
++
+ /* Fix toolbar not adapting size to floating toolbar elements */
+ .dijitToolbar:after {
+    content: ".";
+diff --git a/vendors/wodotexteditor/wodotexteditor.js b/vendors/wodotexteditor/wodotexteditor.js
+index b8bd6a9..05707ef 100644
+--- a/vendors/wodotexteditor/wodotexteditor.js
++++ b/vendors/wodotexteditor/wodotexteditor.js
+@@ -267,6 +267,7 @@ var Wodo = Wodo || (function () {
+             //
+             loadOdtFile = editorOptions.loadCallback,
+             saveOdtFile = editorOptions.saveCallback,
++            saveAsOdtFile = editorOptions.saveAsCallback,
+             downloadOdtFile = editorOptions.downloadCallback,
+             close =       editorOptions.closeCallback,
+             //
+@@ -688,6 +689,7 @@ var Wodo = Wodo || (function () {
+                 onToolDone: setFocusToOdfCanvas,
+                 loadOdtFile: loadOdtFile,
+                 saveOdtFile: saveOdtFile,
++                saveAsOdtFile: saveAsOdtFile,
+                 downloadOdtFile: downloadOdtFile,
+                 close: close,
+                 directTextStylingEnabled: directTextStylingEnabled,
+diff --git a/vendors/wodotexteditor/translations/nl-NL.json b/vendors/wodotexteditor/translations/nl-NL.json
+index 7d4fcbb..1a178e0 100644
+--- a/vendors/wodotexteditor/translations/nl-NL.json
++++ b/vendors/wodotexteditor/translations/nl-NL.json
+@@ -5,6 +5,7 @@
+     "File": "Bestand",
+     "Open": "Openen",
+     "Save": "Opslaan",
++    "Save as...": "Opslaan als...",
+     "Edit": "Bewerken",
+     "View": "Beeld",
+     "Annotate": "Notitie toevoegen",

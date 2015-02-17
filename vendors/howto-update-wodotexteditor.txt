@@ -1,0 +1,15 @@
+1. Get wodotexteditor-x.y.z.zip from http://webodf.org/download/ (location as of 0.5.5)
+2. Unzip somewhere
+3. Replace "vendors/wodotexteditor" with the complete "wodotexteditor" subdir from the unzipped download
+4. Apply patches from "vendors/patches/wodotexteditor" (include binary diffs)
+
+   First check if any of the patches have been merged upstream and remove them if.
+
+   The patches ideally would be applied in this order
+   1. addDownloadButtonOption.patch
+   2. hideAboutDialog.patch
+   3. addReadonlyMode.patch
+   4. takeUILanguageFromElgg.patch
+   5. addSaveAsOption.patch
+
+   "git apply vendors/patches/wodotexteditor/*" would apply them in one go.
