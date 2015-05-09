@@ -23,14 +23,16 @@ if (!$file) {
 }
 
 // user must be able to edit file
-/*
 if (!$file->canEdit()) {
-    // TODO: also support case that user gets write access again, needs suberror state so client keeps pulling the lock
-    // for now just hide this problem, will be obvious when saving is tried, and there the error can be recovered by retrying
     register_error(elgg_echo('You do no longer have write access to the file that is edited.'));
     forward(REFERER);
 }
-*/
+
+// save folder guid in parameter to make sure file_tools_object_handler does not overwrite the relationship
+$relationships = get_entity_relationships($file->guid, FILE_TOOLS_RELATIONSHIP, true);
+if (elgg_is_active_plugin('file_tools') && count($relationships) > 0) {
+    set_input('folder_guid', $relationships[0]->guid_one);
+}    
 
 // lock no longer owned?
 if (odt_editor_locking_lock_guid($file) != $lock_guid) {
