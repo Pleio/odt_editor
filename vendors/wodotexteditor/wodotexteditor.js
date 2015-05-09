@@ -125,13 +125,12 @@ var Wodo = Wodo || (function () {
         memberId = "localuser",
         // constructors
         BorderContainer, ContentPane, FullWindowZoomHelper, EditorSession, Tools,
-        UndoManager,
         /** @inner @const
             @type{!string} */
         EVENT_UNKNOWNERROR = "unknownError",
         /** @inner @const
             @type {!string} */
-        EVENT_MODIFIEDCHANGED = "modifiedChanged",
+        EVENT_DOCUMENTMODIFIEDCHANGED = "documentModifiedChanged",
         /** @inner @const
             @type {!string} */
         EVENT_METADATACHANGED = "metadataChanged";
@@ -147,9 +146,8 @@ var Wodo = Wodo || (function () {
             "webodf/editor/FullWindowZoomHelper",
             "webodf/editor/EditorSession",
             "webodf/editor/Tools",
-            "webodf/editor/Translator",
-            "webodf/editor/UndoManager"],
-            function (BC, CP, FWZH, ES, T, Translator, UM) {
+            "webodf/editor/Translator"],
+            function (BC, CP, FWZH, ES, T, Translator) {
                 var locale = elgg.get_language(),
                     editorBase = dojo.config && dojo.config.paths && dojo.config.paths["webodf/editor"],
                     translationsDir = editorBase + '/translations',
@@ -160,7 +158,6 @@ var Wodo = Wodo || (function () {
                 FullWindowZoomHelper = FWZH,
                 EditorSession = ES;
                 Tools = T;
-                UndoManager = UM;
 
                 // TODO: locale cannot be set by the user, also different for different editors
                 t = new Translator(translationsDir, locale, function (editorTranslator) {
@@ -288,7 +285,7 @@ var Wodo = Wodo || (function () {
             //
             eventNotifier = new core.EventNotifier([
                 EVENT_UNKNOWNERROR,
-                EVENT_MODIFIEDCHANGED,
+                EVENT_DOCUMENTMODIFIEDCHANGED,
                 EVENT_METADATACHANGED
             ]);
 
@@ -307,7 +304,7 @@ var Wodo = Wodo || (function () {
          * @return {undefined}
          */
         function relayModifiedSignal(modified) {
-            eventNotifier.emit(EVENT_MODIFIEDCHANGED, modified);
+            eventNotifier.emit(EVENT_DOCUMENTMODIFIEDCHANGED, modified);
         }
 
         /**
@@ -335,8 +332,8 @@ var Wodo = Wodo || (function () {
                 reviewModeEnabled: reviewModeEnabled
             });
             if (undoRedoEnabled) {
-                editorSession.sessionController.setUndoManager(new UndoManager());
-                editorSession.sessionController.getUndoManager().subscribe(UndoManager.signalModifiedChanged, relayModifiedSignal);
+                editorSession.sessionController.setUndoManager(new gui.TrivialUndoManager());
+                editorSession.sessionController.getUndoManager().subscribe(gui.UndoManager.signalDocumentModifiedChanged, relayModifiedSignal);
             }
 
             // Relay any metadata changes to the Editor's consumer as an event
@@ -534,22 +531,27 @@ var Wodo = Wodo || (function () {
         }
 
         /**
-         * Sets the current state to be the unmodified state.
+         * Sets the current state of the document to be either the unmodified state
+         * or a modified state.
+         * If @p modified is @true and the current state was already a modified state,
+         * this call has no effect and also does not remove the unmodified flag
+         * from the state which has it set.
          *
-         * @name TextEditor#setDocumentUnmodified
+         * @name TextEditor#setDocumentModified
          * @function
+         * @param {!boolean} modified
          * @return {undefined}
          */
-        this.setDocumentUnmodified = function() {
+        this.setDocumentModified = function(modified) {
             runtime.assert(editorSession, "editorSession should exist here.");
 
             if (undoRedoEnabled) {
-                editorSession.sessionController.getUndoManager().setUnmodified();
+                editorSession.sessionController.getUndoManager().setDocumentModified(modified);
             }
         };
 
         /**
-         * Returns if the current state matches the unmodified state.
+         * Returns if the current state of the document matches the unmodified state.
          * @name TextEditor#isDocumentModified
          * @function
          * @return {!boolean}
@@ -558,7 +560,7 @@ var Wodo = Wodo || (function () {
             runtime.assert(editorSession, "editorSession should exist here.");
 
             if (undoRedoEnabled) {
-                return editorSession.sessionController.getUndoManager().isModified();
+                return editorSession.sessionController.getUndoManager().isDocumentModified();
             }
 
             return false;
@@ -674,6 +676,11 @@ var Wodo = Wodo || (function () {
             // Not nice to do this on body, but then there is no other way known
             // to style also all dialogs, which are attached directly to body
             document.body.classList.add("claro");
+
+            // prevent browser translation service messing up internal address system
+            // TODO: this should be done more centrally, but where exactly?
+            canvasElement.setAttribute("translate", "no");
+            canvasElement.classList.add("notranslate");
 
             // create widgets
             mainContainer = new BorderContainer({}, mainContainerElementId);
@@ -838,8 +845,8 @@ var Wodo = Wodo || (function () {
         // flags
         /** Id of event for an unkown error */
         EVENT_UNKNOWNERROR: EVENT_UNKNOWNERROR,
-        /** Id of event if modified state changes */
-        EVENT_MODIFIEDCHANGED: EVENT_MODIFIEDCHANGED,
+        /** Id of event if documentModified state changes */
+        EVENT_DOCUMENTMODIFIEDCHANGED: EVENT_DOCUMENTMODIFIEDCHANGED,
         /** Id of event if metadata changes */
         EVENT_METADATACHANGED: EVENT_METADATACHANGED
     };

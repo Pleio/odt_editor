@@ -1,0 +1,13 @@
+diff --git a/vendors/wodotexteditor/wodotexteditor.js b/vendors/wodotexteditor/wodotexteditor.js
+index d4b0298..940add4 100644
+--- a/vendors/wodotexteditor/wodotexteditor.js
++++ b/vendors/wodotexteditor/wodotexteditor.js
+@@ -666,7 +666,7 @@ var Wodo = Wodo || (function () {
+                 annotationsEnabled: annotationsEnabled,
+                 undoRedoEnabled: undoRedoEnabled,
+                 zoomingEnabled: zoomingEnabled,
+-                aboutEnabled: true
++                aboutEnabled: false
+             });
+ 
+             odfCanvas = new odf.OdfCanvas(canvasElement);

@@ -147,10 +147,7 @@ define("webodf/editor/Tools", [
                     aboutButton = new Button({
                         label: tr('About WebODF Text Editor'),
                         showLabel: false,
-                        iconClass: 'webodfeditor-dijitWebODFIcon',
-                        style: {
-                            float: 'left'
-                        }
+                        iconClass: 'webodfeditor-dijitWebODFIcon'
                     });
                     aboutDialog = new AboutDialog(function (dialog) {
                         aboutButton.onClick = function () {
@@ -162,33 +159,12 @@ define("webodf/editor/Tools", [
                     aboutButton.placeAt(toolbar);
                 }
 
-                // Undo/Redo
-                undoRedoMenu = createTool(UndoRedoMenu, args.undoRedoEnabled);
-
-                // Add annotation
-                annotationControl = createTool(AnnotationControl, args.annotationsEnabled);
-
-                // Simple Style Selector [B, I, U, S]
-                simpleStyles = createTool(SimpleStyles, args.directTextStylingEnabled);
-
-                // Paragraph direct alignment buttons
-                paragraphAlignment = createTool(ParagraphAlignment, args.directParagraphStylingEnabled);
-
-                // Paragraph Style Selector
-                currentStyle = createTool(CurrentStyle, args.paragraphStyleSelectingEnabled);
-
-                // Zoom Level Selector
-                zoomSlider = createTool(ZoomSlider, args.zoomingEnabled);
-
                 // Load
                 if (loadOdtFile) {
                     loadButton = new Button({
                         label: tr('Open'),
                         showLabel: false,
                         iconClass: 'dijitIcon dijitIconFolderOpen',
-                        style: {
-                            float: 'left'
-                        },
                         onClick: function () {
                             loadOdtFile();
                         }
@@ -202,9 +178,6 @@ define("webodf/editor/Tools", [
                         label: tr('Save'),
                         showLabel: false,
                         iconClass: 'dijitEditorIcon dijitEditorIconSave',
-                        style: {
-                            float: 'left'
-                        },
                         onClick: function () {
                             saveOdtFile();
                             onToolDone();
@@ -219,9 +192,6 @@ define("webodf/editor/Tools", [
                         label: tr('Save as...'),
                         showLabel: false,
                         iconClass: 'webodfeditor-dijitSaveAsIcon',
-                        style: {
-                            float: 'left'
-                        },
                         onClick: function () {
                             saveAsOdtFile();
                             onToolDone();
@@ -270,12 +240,27 @@ define("webodf/editor/Tools", [
                         disabled: true,
                         label: tr('Format'),
                         iconClass: "dijitIconEditTask",
-                        style: {
-                            float: 'left'
-                        }
                     });
                     formatMenuButton.placeAt(toolbar);
                 }
+
+                // Undo/Redo
+                undoRedoMenu = createTool(UndoRedoMenu, args.undoRedoEnabled);
+
+                // Add annotation
+                annotationControl = createTool(AnnotationControl, args.annotationsEnabled);
+
+                // Simple Style Selector [B, I, U, S]
+                simpleStyles = createTool(SimpleStyles, args.directTextStylingEnabled);
+
+                // Paragraph direct alignment buttons
+                paragraphAlignment = createTool(ParagraphAlignment, args.directParagraphStylingEnabled);
+
+                // Paragraph Style Selector
+                currentStyle = createTool(CurrentStyle, args.paragraphStyleSelectingEnabled);
+
+                // Zoom Level Selector
+                zoomSlider = createTool(ZoomSlider, args.zoomingEnabled);
 
                 // hyper links
                 editHyperlinks = createTool(EditHyperlinks, args.hyperlinkEditingEnabled);

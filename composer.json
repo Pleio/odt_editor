@@ -1,0 +1,7 @@
+{
+    "name": "pleio/odt_editor",
+    "type": "elgg-plugin",
+    "require": {
+        "composer/installers": "~1.0"
+    }
+}

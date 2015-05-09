@@ -1,0 +1,34 @@
+diff --git a/vendors/wodotexteditor/wodotexteditor.js b/vendors/wodotexteditor/wodotexteditor.js
+index 940add4..fb82383 100644
+--- a/vendors/wodotexteditor/wodotexteditor.js
++++ b/vendors/wodotexteditor/wodotexteditor.js
+@@ -290,6 +290,7 @@ var Wodo = Wodo || (function () {
+             imageEditingEnabled = isEnabled(editorOptions.imageEditingEnabled),
+             hyperlinkEditingEnabled = isEnabled(editorOptions.hyperlinkEditingEnabled),
+             reviewModeEnabled = Boolean(editorOptions.reviewModeEnabled), // needs to be explicitly enabled
++            readonlyModeEnabled = Boolean(editorOptions.readonlyModeEnabled), // needs to be explicitly enabled
+             annotationsEnabled = reviewModeEnabled || isEnabled(editorOptions.annotationsEnabled),
+             undoRedoEnabled = isEnabled(editorOptions.undoRedoEnabled),
+             zoomingEnabled = isEnabled(editorOptions.zoomingEnabled),
+@@ -358,7 +359,9 @@ var Wodo = Wodo || (function () {
+ 
+             tools.setEditorSession(editorSession);
+             editorSession.sessionController.insertLocalCursor();
+-            editorSession.sessionController.startEditing();
++            if (!readonlyModeEnabled) {
++                editorSession.sessionController.startEditing();
++            }
+         }
+ 
+         /**
+@@ -368,7 +371,9 @@ var Wodo = Wodo || (function () {
+             runtime.assert(editorSession, "editorSession should exist here.");
+ 
+             tools.setEditorSession(undefined);
+-            editorSession.sessionController.endEditing();
++            if (!readonlyModeEnabled) {
++                editorSession.sessionController.endEditing();
++            }
+             editorSession.sessionController.removeLocalCursor();
+         }
+ 
