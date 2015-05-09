@@ -51,14 +51,13 @@ function odt_editor_route_file_handler($hook, $type, $return_value, $params) {
  *               $return_value['segments'] => url parts ($page)
  * @param null   $params       no params provided
  */
-function odt_editor_file_menu_title_hook($hook, $type, $return_value, $params) {   
+function odt_editor_file_menu_title_hook($hook, $type, $return_value, $params) {
     if (elgg_in_context('file')) {
         $return_value[] = ElggMenuItem::factory(array(
             "name" => "view",
             "text" => elgg_echo('odt_editor:newdocument'),
-            "href" => "odt_editor/create/" . (elgg_get_page_owner_guid() == 0 ? elgg_get_logged_in_user_guid() : elgg_get_page_owner_guid()),
             "class" => "elgg-button elgg-button-action",
-            "target" => "_blank",
+            "id" => "file_tools_list_new_document_toggle",
             "priority" => 50
         ));
     }

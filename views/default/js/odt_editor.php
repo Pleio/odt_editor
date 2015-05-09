@@ -14,6 +14,7 @@
 elgg.provide("elgg.odt_editor");
 
 elgg.odt_editor.init = function() {
+    
     var editor,
         refreshFileLockTask,
         refreshFileLockTaskTimeout = 5*60*1000,
@@ -25,6 +26,13 @@ elgg.odt_editor.init = function() {
         fileName,
         containerGuid,
         elggSiteName;
+
+    function urlParam(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }    
 
     function refreshFileLock() {
         // new document?
@@ -79,6 +87,7 @@ elgg.odt_editor.init = function() {
                 var title = $(form).find("input[name='title']").val();
                 var tags = $(form).find("input[name='tags']").val();
                 var access_id = $(form).find("select[name='access_id']").val();
+                var folderGuid = $(form).find("select[name='folder_guid']").val();
                 var blob = new Blob([data.buffer], {type: "application/vnd.oasis.opendocument.text"});
                 var formData = new FormData();
 
@@ -86,6 +95,7 @@ elgg.odt_editor.init = function() {
                 formData.append("old_file_guid", fileGuid);
                 formData.append("old_lock_guid", lockGuid);
                 formData.append("container_guid", containerGuid);
+                formData.append("folder_guid", folderGuid);
                 formData.append("title", title);
                 formData.append("tags", tags);
                 formData.append("access_id", access_id);
@@ -136,6 +146,11 @@ elgg.odt_editor.init = function() {
                 elgg.odt_editor.doSaveAs = doSaveAs;
                 // set focus to title field initially TODO: find better/standard way
                 $("#odt_editor_form_saveas input[name='title']").focus();
+
+                // set to current folder
+                if (urlParam('folder_guid')) {
+                    $("#odt_editor_form_saveas select[name='folder_guid']").val(urlParam('folder_guid'));
+                }
             }
         });
     }

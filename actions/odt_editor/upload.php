@@ -41,6 +41,12 @@ if (odt_editor_locking_lock_guid($file) != $lock_guid) {
     forward(REFERER);
 }
 
+// save folder guid in parameter to make sure file_tools_object_handler does not overwrite the relationship
+$relationships = get_entity_relationships($file->guid, FILE_TOOLS_RELATIONSHIP, true);
+if (elgg_is_active_plugin('file_tools') && count($relationships) > 0) {
+    set_input('folder_guid', $relationships[0]->guid_one);
+}
+
 // previous file, delete it
 $filename = $file->getFilenameOnFilestore();
 if (file_exists($filename)) {

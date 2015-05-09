@@ -30,10 +30,15 @@ if ($file == 0) {
 
     $edit_mode = "readonly";
     if ($file->canEdit()) {
+        // save folder guid in parameter to make sure file_tools_object_handler does not overwrite the relationship
+        $relationships = get_entity_relationships($file->guid, FILE_TOOLS_RELATIONSHIP, true);
+        if (elgg_is_active_plugin('file_tools') && count($relationships) > 0) {
+            set_input('folder_guid', $relationships[0]->guid_one);
+        }
+
         // currently locked?
-        if (odt_editor_locking_is_locked($file)) {
-            $lock_owner_guid = odt_editor_locking_lock_owner_guid($file);
-            $locking_user = get_entity($lock_owner_guid);
+        if (odt_editor_locking_is_locked($file) && odt_editor_locking_lock_owner_guid($file) != elgg_get_logged_in_user_guid()) {
+            $locking_user = get_entity(elgg_get_logged_in_user_guid());
             $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("odt_editor:unknown_user");
 
             system_message(elgg_echo("odt_editor:document_locked_by", array($locking_user_name)));
@@ -44,7 +49,7 @@ if ($file == 0) {
             } else {
                 register_error(elgg_echo("odt_editor:error:cannotwritelock"));
             }
-        }
+        }    
     }
 
     $title = $file->title;

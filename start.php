@@ -18,6 +18,10 @@ function odt_editor_init() {
     elgg_register_js('wodotexteditor', '/mod/odt_editor/vendors/wodotexteditor/wodotexteditor.js');
 
     elgg_register_js('elgg.odt_editor', elgg_get_simplecache_url('js', 'odt_editor'));
+
+    // extend js
+    elgg_extend_view("js/elgg", "js/file_tools");
+
     elgg_register_simplecache_view('js/odt_editor');
 
     // extend file page handler
