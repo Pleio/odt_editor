@@ -48,7 +48,7 @@ if(file_tools_use_folder_structure()) {
 
 $categories = elgg_view('input/categories', $vars);
 if ($categories) {
-	echo $categories;
+	$form_body .= $categories;
 }
 
 $form_body .= '<div class="elgg-foot">';
