@@ -27,10 +27,6 @@ $lang = get_current_language();
 </head>
 <body style="width:100%; height:100%;">
 <div style="width:100%; height:100%;">
-	<div class="elgg-page-messages">
-		<?php echo $messages; ?>
-	</div>
-	
 	<?php if (elgg_is_logged_in()){ ?>
 	<div class="elgg-page-topbar">
 		<div class="elgg-inner">
@@ -38,7 +34,11 @@ $lang = get_current_language();
 		</div>
 	</div>
 	<?php } ?>
-	
+
+	<div class="elgg-page-messages">
+		<?php echo $messages; ?>
+	</div>
+
 	<div class="elgg-page-header">
 		<div class="elgg-inner">
 			<?php echo $header; ?>

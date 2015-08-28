@@ -5,6 +5,20 @@
  * @package odt_editor
  */
 ?>
+
+body {
+    background-color: #fff;
+    background-image: none !important;
+}
+
+.elgg-page-messages {
+    z-index: 1;
+    position: absolute;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+}
+
 @namespace office url(urn:oasis:names:tc:opendocument:xmlns:office:1.0);
 
 /* dojo sets margin-top to 1em, which screws the elgg header */

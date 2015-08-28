@@ -34,7 +34,11 @@ elgg.odt_editor.init = function() {
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }    
 
-    function refreshFileLock() {
+    function refreshFileLock(async) {
+        if (typeof async === 'undefined') {
+            async = true;
+        }
+
         // new document?
         if (fileGuid == 0) {
             // no lock, just trigger next attempt
@@ -42,11 +46,18 @@ elgg.odt_editor.init = function() {
             return;
         }
 
+        if (isLockNeeded) {
+            var lock_set = 1;
+        } else {
+            var lock_set = 0;
+        }
+
         elgg.action('odt_editor/refresh_filelock', {
+            async: async,
             data: {
                 file_guid: fileGuid,
                 lock_guid: lockGuid,
-                lock_set: isLockedNeeded ? 1 : 0
+                lock_set: lock_set
             },
             error: function() {
                 elgg.system_message(elgg.echo('odt_editor:error:cannotrefreshlock_servernotreached'));
@@ -122,7 +133,7 @@ elgg.odt_editor.init = function() {
                         }
                         if (data.system_messages.success.length > 0) {
                             elgg.system_message(data.system_messages.success[0]);
-                            editor.setDocumentUnmodified();
+                            editor.setDocumentModified(false);
                             // update data for current file
                             reply = data.output;
                             lockGuid = reply.lock_guid;
@@ -195,7 +206,7 @@ elgg.odt_editor.init = function() {
                     }
                     if (data.system_messages.success.length > 0) {
                         elgg.system_message(data.system_messages.success[0]);
-                        editor.setDocumentUnmodified();
+                        editor.setDocumentModified(false);
                     }
                 }
             });
@@ -258,19 +269,19 @@ elgg.odt_editor.init = function() {
                     refreshFileLock();
                 }, refreshFileLockTaskTimeout);
                 refreshFileLockTask.trigger();
-                // be gently and on unloading try to remove the lock
-                // TODO: is too late for page reload, as the new page seems requested
-                // before the XHR from this handler gets called.
-                // no data loss, but not perfect
-                window.addEventListener('unload', function(event) {
-                    isLockedNeeded = false;
-                    refreshFileLockTask.triggerImmediate();
-                });
 
                 window.addEventListener("beforeunload", function (e) {
-                    var confirmationMessage = elgg.echo('odt_editor:unsaved_changes_exist');
+                    isLockNeeded = false;
+                    refreshFileLock(false);
+
+                    // reapply lock when user continues
+                    setTimeout(function() {
+                        isLockNeeded = true;
+                        refreshFileLock(false);
+                    }, 100);
 
                     if (editor.isDocumentModified()) {
+                        var confirmationMessage = elgg.echo('odt_editor:unsaved_changes_exist');
                         // Gecko + IE
                         (e || window.event).returnValue = confirmationMessage;
                         // Webkit, Safari, Chrome etc.

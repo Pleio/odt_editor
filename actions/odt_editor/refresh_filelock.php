@@ -32,25 +32,32 @@ if (!$file->canEdit()) {
 $relationships = get_entity_relationships($file->guid, FILE_TOOLS_RELATIONSHIP, true);
 if (elgg_is_active_plugin('file_tools') && count($relationships) > 0) {
     set_input('folder_guid', $relationships[0]->guid_one);
-}    
+}
 
-// lock no longer owned?
+// recreate lock, user closed window but cancelled
+if ($lock_set && !odt_editor_locking_is_locked($file)) {
+    trigger_error("Restored lock", E_USER_WARNING);
+    odt_editor_locking_create_lock($file, $user_guid, $lock_guid);
+    forward(REFERER);
+}
+
+// check for lost lock
 if (odt_editor_locking_lock_guid($file) != $lock_guid) {
-    if ($lock_set) {
-        $lock_owner_guid = odt_editor_locking_lock_owner_guid($file);
-        if ($lock_owner_guid != $user_guid) {
-            $locking_user = get_entity($lock_owner_guid);
-            $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("odt_editor:unknown_user");
-            register_error(elgg_echo('odt_editor:lock_lost_to', array($locking_user_name)));
-        } else {
-            register_error(elgg_echo('odt_editor:lock_lost_to_self'));
-        }
+    $lock_owner_guid = odt_editor_locking_lock_owner_guid($file);
+
+    if ($lock_owner_guid != $user_guid) {
+        $locking_user = get_entity($lock_owner_guid);
+        $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("odt_editor:unknown_user");
+        register_error(elgg_echo('odt_editor:lock_lost_to', array($locking_user_name)));
+    } else {
+        register_error(elgg_echo('odt_editor:lock_lost_to_self'));
     }
+
     forward(REFERER);
 }
 
 // update lock time
-if ($lock_set) {
+if ($lock_set == 1) {
     odt_editor_locking_update_lock($file);
 } else {
     odt_editor_locking_remove_lock($file);

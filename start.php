@@ -35,7 +35,7 @@ function odt_editor_init() {
     elgg_register_action("odt_editor/refresh_filelock", elgg_get_plugins_path() . "odt_editor/actions/odt_editor/refresh_filelock.php");
 
     // fight Dojo css ruining some of elgg styling
-    elgg_register_css('elgg.odt_editor_dojo_overwrite', elgg_get_simplecache_url('css', 'odt_editor_dojo_overwrite'));
+    elgg_register_css('elgg.odt_editor_dojo_overwrite', elgg_get_simplecache_url('css', 'odt_editor_dojo_overwrite'), 1000);
     elgg_register_simplecache_view('css/odt_editor_dojo_overwrite');
 
     elgg_register_page_handler("odt_editor", "odt_editor_page_handler");

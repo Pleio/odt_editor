@@ -8,6 +8,7 @@
     $english = array(
         // general
         'odt_editor:error:file_removed' => "The file that is edited has been removed on the system.",
+        'odt_editor:read_only' => "This document is opened in read-only mode as you don't have write access.",
         'odt_editor:unknown_user' => "Unknown user",
         'odt_editor:lock_lost_to' => "The editing lock has been lost to: %s.",
         'odt_editor:lock_lost_to_self' => "The editing lock has been lost to another session of you.",

@@ -9,6 +9,7 @@
     $dutch = array(
         // general
         'odt_editor:error:file_removed' => "Het gewijzigde bestand is verwijderd van de server.",
+        'odt_editor:read_only' => "Dit document is geopend in alleen-lezen modus omdat je geen schrijfrechten hebt.",
         'odt_editor:unknown_user' => "Onbekende gebruiker",
         'odt_editor:lock_lost_to' => "Het bestand is geopend door: %s.",
         'odt_editor:lock_lost_to_self' => "De bestandsvergrendeling overgenomen door een andere sessie van jezelf.",

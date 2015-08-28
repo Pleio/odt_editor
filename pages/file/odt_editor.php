@@ -37,8 +37,8 @@ if ($file == 0) {
         }
 
         // currently locked?
-        if (odt_editor_locking_is_locked($file) && odt_editor_locking_lock_owner_guid($file) != elgg_get_logged_in_user_guid()) {
-            $locking_user = get_entity(elgg_get_logged_in_user_guid());
+        if (odt_editor_locking_is_locked($file)) {
+            $locking_user = get_entity(odt_editor_locking_lock_owner_guid($file));
             $locking_user_name = $locking_user ? $locking_user->name : elgg_echo("odt_editor:unknown_user");
 
             system_message(elgg_echo("odt_editor:document_locked_by", array($locking_user_name)));
@@ -49,7 +49,9 @@ if ($file == 0) {
             } else {
                 register_error(elgg_echo("odt_editor:error:cannotwritelock"));
             }
-        }    
+        }
+    } else {
+        system_message(elgg_echo("odt_editor:read_only"));
     }
 
     $title = $file->title;
