@@ -1,7 +1,14 @@
 {
     "name": "pleio/odt_editor",
+    "description": "This ODT file editor for Elgg.",
     "type": "elgg-plugin",
+    "keywords": ["elgg", "plugin", "odt"],
+    "license": "GPL-2.0",
+    "support": {
+        "source": "https://github.com/Pleio/odt_editor",
+        "issues": "https://github.com/Pleio/odt_editor/issues"
+    },
     "require": {
-        "composer/installers": "~1.0"
+        "composer/installers": "^1.0.8"
     }
 }
