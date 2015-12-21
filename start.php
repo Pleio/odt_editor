@@ -19,9 +19,6 @@ function odt_editor_init() {
 
     elgg_register_js('elgg.odt_editor', elgg_get_simplecache_url('js', 'odt_editor'));
 
-    // extend js
-    elgg_extend_view("js/elgg", "js/file_tools");
-
     elgg_register_simplecache_view('js/odt_editor');
 
     // extend file page handler
@@ -30,6 +27,7 @@ function odt_editor_init() {
     // extend file page menu
     if (elgg_is_active_plugin('file_tools')) {
         elgg_register_plugin_hook_handler("register", "menu:title", "odt_editor_file_menu_title_hook");
+        elgg_extend_view("js/elgg", "js/file_tools");
     }
 
     elgg_register_action("odt_editor/upload", elgg_get_plugins_path() . "odt_editor/actions/odt_editor/upload.php");
