@@ -55,8 +55,8 @@ $form_body .= '<div class="elgg-foot">';
 $form_body .= elgg_view('input/submit', array('value' => elgg_echo('odt_editor:saveas'), "class" => "elgg-button-submit mtm"));
 $form_body .= '</div>';
 
-$body = elgg_view('input/form', array('id'     => 'odt_editor_form_saveas', 
-                                      'name'   => 'odt_editor_form_saveas', 
+$body = elgg_view('input/form', array('id'     => 'odt_editor_form_saveas',
+                                      'name'   => 'odt_editor_form_saveas',
                                       'action' => 'javascript:elgg.odt_editor.doSaveAs($(\'#odt_editor_form_saveas\'))',
                                       'body'   => $form_body));
 

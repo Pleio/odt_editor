@@ -51,6 +51,13 @@ $lock_guid = odt_editor_locking_create_lock($file, $user_guid);
 
 $file->save();
 
+$folder = get_input('folder_guid');
+$folder = get_entity($folder);
+
+if ($folder && $folder->canWriteToContainer()) {
+    add_entity_relationship($folder->guid, "folder_of", $file->guid);
+}
+
 // log success
 system_message(elgg_echo("file:saved"));
 add_to_river('river/object/file/create', 'create', $user_guid, $file->guid);
