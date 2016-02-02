@@ -7,16 +7,13 @@
 
 elgg_load_library('odt_editor:locking');
 
-// need to be logged in
-gatekeeper();
-
-//only for group members
-group_gatekeeper();
-
 $file_guid = get_input('guid');
 
 // new document?
 if ($file == 0) {
+    gatekeeper();
+    group_gatekeeper();
+
     $title = elgg_echo("odt_editor:newdocument");
     $file_name = "document.odt";
     $container_guid = get_input('container_guid');
@@ -24,6 +21,11 @@ if ($file == 0) {
     $edit_mode = "readwrite";
 } else {
     $file = get_entity($file_guid);
+    if (!$file) {
+        register_error(elgg_echo('noaccess'));
+        redirect();
+    }
+
     // TODO: is there a way to get the original filename when uploaded?
     $file_name = $file->getFilename();
     $user_guid = elgg_get_logged_in_user_guid();
@@ -69,8 +71,13 @@ elgg_load_css('lightbox');
 
 $sitename = elgg_get_config('sitename');
 
-// TODO: the header bar size of 28px should be fetched from somewhere, to support themes
-$content = "<div class=\"notranslate\" translate=\"no\" id=\"odt_editor\" style=\"width: 100%;height: calc(100% - 28px); margin-top: 28px; padding: 0;\" data-document-url=\"$download_url\" data-guid=\"$file_guid\" data-filename=\"$file_name\" data-containerguid=\"$container_guid\" data-editmode=\"$edit_mode\" data-lockguid=\"$lock_guid\" data-sitename=\"$sitename\"></div>";
+if (!elgg_is_logged_in()) {
+    $topbar = "0px";
+} else {
+    $topbar = "28px";
+}
+
+$content = "<div class=\"notranslate\" translate=\"no\" id=\"odt_editor\" style=\"width: 100%;height: calc(100% - {$topbar}); margin-top: {$topbar}; padding: 0;\" data-document-url=\"$download_url\" data-guid=\"$file_guid\" data-filename=\"$file_name\" data-containerguid=\"$container_guid\" data-editmode=\"$edit_mode\" data-lockguid=\"$lock_guid\" data-sitename=\"$sitename\"></div>";
 
 $body = $content;
 

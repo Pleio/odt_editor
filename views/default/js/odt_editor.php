@@ -14,7 +14,7 @@
 elgg.provide("elgg.odt_editor");
 
 elgg.odt_editor.init = function() {
-    
+
     var editor,
         refreshFileLockTask,
         refreshFileLockTaskTimeout = 5*60*1000,
@@ -32,7 +32,7 @@ elgg.odt_editor.init = function() {
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
             results = regex.exec(location.search);
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }    
+    }
 
     function refreshFileLock(async) {
         if (typeof async === 'undefined') {
@@ -232,11 +232,19 @@ elgg.odt_editor.init = function() {
     var odtEditorDiv = document.getElementById("odt_editor");
     var isReadonlyMode = odtEditorDiv && odtEditorDiv.getAttribute("data-editmode") === "readonly";
 
+    var user = elgg.get_logged_in_user_entity();
+
+    if (user) {
+        var fullName = user.name;
+    } else {
+        var fullName = "";
+    }
+
     var editorConfig = isReadonlyMode ? {
         readonlyModeEnabled: true,
         downloadCallback: downloadOriginal,
         userData: {
-            fullName: elgg.get_logged_in_user_entity().name
+            fullName: fullName
         }
     } : {
         allFeaturesEnabled: true,
@@ -245,7 +253,7 @@ elgg.odt_editor.init = function() {
         saveAsCallback: saveAsAction,
         downloadCallback: download,
         userData: {
-            fullName: elgg.get_logged_in_user_entity().name
+            fullName: fullName
         }
     };
     documentUrl = odtEditorDiv && odtEditorDiv.getAttribute("data-document-url");
