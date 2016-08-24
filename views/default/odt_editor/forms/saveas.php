@@ -13,8 +13,10 @@ if ($old_file_guid != 0) {
 	$old_file = new ElggFile($old_file_guid);
 	$tags = $old_file ? $old_file->tags : array();
 	$access_id = $old_file ? $old_file->access_id : ACCESS_DEFAULT;
+	$write_access_id = $old_file ? $old_file->write_access_id : ACCESS_PRIVATE;
 } else {
 	$access_id = ACCESS_DEFAULT;
+	$write_access_id = ACCESS_PRIVATE;
 }
 
 $form_body .= '<div>';
@@ -28,9 +30,16 @@ $form_body .= elgg_view('input/tags', array('name' => 'tags', 'value' => $tags))
 $form_body .= '</div>';
 
 $form_body .= '<div>';
-$form_body .= '<label>' . elgg_echo('access') . '</label><br />';
+$form_body .= '<label>' . elgg_echo('access:read') . '</label><br />';
 $form_body .= elgg_view('input/access', array('name' => 'access_id', 'value' => $access_id));
 $form_body .= '</div>';
+
+if (elgg_is_active_plugin('pleiofile')) {
+	$form_body .= '<div>';
+	$form_body .= '<label>' . elgg_echo('access:write') . '</label><br />';
+	$form_body .= elgg_view('input/access', array('name' => 'write_access_id', 'value' => $write_access_id));
+	$form_body .= '</div>';
+}
 
 if(file_tools_use_folder_structure()) {
 	$parent_guid = 0;

@@ -16,7 +16,10 @@ $user_guid = elgg_get_logged_in_user_guid();
 $title = htmlspecialchars(get_input('title', '', false), ENT_QUOTES, 'UTF-8');
 $description = ""; // TODO: get_input("description");
 $tags = explode(",", get_input("tags"));
+
 $access_id = (int) get_input("access_id", ACCESS_DEFAULT);
+$write_access_id = (int) get_input("write_access_id", ACCESS_PRIVATE);
+
 $container_guid = (int) get_input('container_guid');
 
 // fallback to user if somebody deleted the group container behind our back
@@ -30,6 +33,7 @@ if (!$container) {
 $file = new ElggFile();
 $file->title = $title;
 $file->access_id = $access_id;
+$file->write_access_id = $write_access_id;
 $file->description = $description;
 $file->container_guid = $container_guid;
 $file->tags = $tags;
@@ -54,7 +58,7 @@ $file->save();
 $folder = get_input('folder_guid');
 $folder = get_entity($folder);
 
-if ($folder && $folder->canWriteToContainer()) {
+if ($folder && $folder->canWriteToContainer() && $folder instanceof ElggObject) {
     add_entity_relationship($folder->guid, "folder_of", $file->guid);
 }
 

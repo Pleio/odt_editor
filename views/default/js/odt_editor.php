@@ -98,6 +98,11 @@ elgg.odt_editor.init = function() {
                 var title = $(form).find("input[name='title']").val();
                 var tags = $(form).find("input[name='tags']").val();
                 var access_id = $(form).find("select[name='access_id']").val();
+
+                if ($(form).find("select[name='write_access_id']")) {
+                    var write_access_id = $(form).find("select[name='write_access_id']").val();
+                }
+
                 var folderGuid = $(form).find("select[name='folder_guid']").val();
                 var blob = new Blob([data.buffer], {type: "application/vnd.oasis.opendocument.text"});
                 var formData = new FormData();
@@ -110,6 +115,11 @@ elgg.odt_editor.init = function() {
                 formData.append("title", title);
                 formData.append("tags", tags);
                 formData.append("access_id", access_id);
+
+                if (write_access_id) {
+                    formData.append("write_access_id", write_access_id);
+                }
+
                 var token = {};
                 elgg.security.addToken(token);
                 Object.keys(token).forEach(function (k) {

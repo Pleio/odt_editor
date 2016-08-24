@@ -8,6 +8,9 @@
 
     $dutch = array(
         // general
+        'access:read' => 'Leesrechten',
+        'access:write' => 'Schrijfrechten',
+        'PRIVATE' => 'Alleen de eigenaar',
         'odt_editor:error:file_removed' => "Het gewijzigde bestand is verwijderd van de server.",
         'odt_editor:read_only' => "Dit document is geopend in alleen-lezen modus omdat je geen schrijfrechten hebt.",
         'odt_editor:unknown_user' => "Onbekende gebruiker",
