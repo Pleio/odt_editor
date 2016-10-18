@@ -37,7 +37,7 @@ $form_body .= '</div>';
 if (elgg_is_active_plugin('pleiofile')) {
 	$form_body .= '<div>';
 	$form_body .= '<label>' . elgg_echo('access:write') . '</label><br />';
-	$form_body .= elgg_view('input/access', array('name' => 'write_access_id', 'value' => $write_access_id));
+	$form_body .= elgg_view('input/write_access', array('name' => 'write_access_id', 'value' => $write_access_id));
 	$form_body .= '</div>';
 }
 
