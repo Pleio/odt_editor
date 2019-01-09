@@ -25,6 +25,7 @@ function odt_editor_route_file_handler($hook, $type, $return_value, $params) {
 
         if ($page[0] == "view") {
             $file = get_entity($page[1]);
+
             // an ODT file?
             if ($file &&
                 ($file instanceof ElggFile) &&
@@ -61,6 +62,6 @@ function odt_editor_file_menu_title_hook($hook, $type, $return_value, $params) {
             "priority" => 50
         ));
     }
-    
+
     return $return_value;
 }

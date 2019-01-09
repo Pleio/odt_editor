@@ -23,12 +23,7 @@ function odt_editor_init() {
 
     // extend file page handler
     elgg_register_plugin_hook_handler("route", "file", "odt_editor_route_file_handler");
-    
-    // extend file page menu
-    if (elgg_is_active_plugin('file_tools')) {
-        elgg_register_plugin_hook_handler("register", "menu:title", "odt_editor_file_menu_title_hook");
-        elgg_extend_view("js/elgg", "js/file_tools");
-    }
+
 
     elgg_register_action("odt_editor/upload", elgg_get_plugins_path() . "odt_editor/actions/odt_editor/upload.php");
     elgg_register_action("odt_editor/upload_asnew", elgg_get_plugins_path() . "odt_editor/actions/odt_editor/upload_asnew.php");
